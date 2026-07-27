@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PM/PO Interview-Ready Guide</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f1f5f9;color:#1a1a1a;height:100vh;overflow:hidden}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:#f1f5f9}::-webkit-scrollbar-thumb{background:#c7d2e0;border-radius:3px}
+.app{display:flex;height:100vh;overflow:hidden}
+
+/* Sidebar */
+.sidebar{flex-shrink:0;background:#fff;border-right:1px solid #e2e8f0;display:flex;flex-direction:column;transition:width .25s;overflow:hidden}
+.sidebar.open{width:220px}.sidebar.closed{width:56px}
+.sidebar-header{display:flex;align-items:center;gap:8px;padding:14px 12px;border-bottom:1px solid #f1f5f9;min-height:58px}
+.sidebar-logo{min-width:30px;height:30px;border-radius:8px;background:#002677;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:13px;flex-shrink:0}
+.sidebar-title{font-size:11px;font-weight:700;color:#002677;line-height:1.3;white-space:nowrap;overflow:hidden}
+.sidebar-sub{font-size:10px;color:#94a3b8}
+.toggle-btn{margin-left:auto;background:none;border:none;cursor:pointer;color:#94a3b8;font-size:13px;padding:4px;border-radius:6px;flex-shrink:0}
+.toggle-btn:hover{background:#f1f5f9}
+.nav{flex:1;overflow-y:auto;padding:8px 6px}
+.nav-btn{width:100%;display:flex;align-items:center;gap:10px;padding:9px 8px;border:none;background:none;cursor:pointer;border-radius:10px;transition:all .15s;text-align:left;color:#64748b}
+.nav-btn:hover{background:#f1f5f9;color:#002677}
+.nav-btn.active{background:#002677;color:#fff}
+.nav-icon{font-size:17px;flex-shrink:0;width:22px;text-align:center}
+.nav-label{font-size:11.5px;font-weight:600;white-space:nowrap;overflow:hidden}
+.sidebar-footer{padding:10px 12px;border-top:1px solid #f1f5f9;font-size:10px;color:#94a3b8;text-align:center}
+
+/* Main */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{background:#fff;border-bottom:1px solid #e2e8f0;padding:10px 20px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.topbar-icon{font-size:20px}
+.topbar-title{font-size:13px;font-weight:700;color:#002677}
+.topbar-sub{font-size:10px;color:#94a3b8}
+.dot-nav{margin-left:auto;display:flex;gap:5px;flex-wrap:wrap}
+.dot{width:22px;height:22px;border-radius:50%;border:none;cursor:pointer;font-size:9px;font-weight:700;background:#e2e8f0;color:#64748b;transition:all .15s}
+.dot:hover{background:#c7d2e0}
+.dot.active{background:#002677;color:#fff}
+.content{flex:1;overflow-y:auto;padding:20px}
+.content-inner{max-width:860px;margin:0 auto}
+
+/* Cards */
+.card{background:#fff;border:1px solid #e2e8f0;border-radius:14px;margin-bottom:14px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.card-header{padding:10px 16px;font-size:12px;font-weight:700;color:#fff}
+.card-body{padding:14px 16px;font-size:12.5px;color:#374151;line-height:1.6}
+.callout{border-left:4px solid #3b82f6;background:#eff6ff;color:#1e3a5f;padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0;font-size:12px;line-height:1.5}
+.callout.green{border-color:#22c55e;background:#f0fdf4;color:#14532d}
+.callout.yellow{border-color:#f59e0b;background:#fffbeb;color:#78350f}
+.callout.orange{border-color:#f97316;background:#fff7ed;color:#7c2d12}
+
+/* Tables */
+.tbl{width:100%;border-collapse:collapse;margin:10px 0;font-size:11.5px}
+.tbl th{background:#002677;color:#fff;text-align:left;padding:7px 10px;font-size:11px}
+.tbl td{border-bottom:1px solid #f1f5f9;padding:6px 10px;color:#374151;vertical-align:top}
+.tbl tr:nth-child(even) td{background:#f8fafc}
+
+/* Tags */
+.tag{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;margin:2px}
+.tag-blue{background:#dbeafe;color:#1e40af}
+.tag-green{background:#dcfce7;color:#15803d}
+.tag-purple{background:#ede9fe;color:#6d28d9}
+.tag-orange{background:#ffedd5;color:#c2410c}
+
+/* Grid */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.grid4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px}
+
+/* Accordion */
+.accordion-btn{width:100%;display:flex;align-items:center;gap:10px;padding:11px 14px;border:none;background:none;cursor:pointer;text-align:left;transition:background .15s}
+.accordion-btn:hover{background:#eff6ff}
+.accordion-circle{width:26px;height:26px;border-radius:50%;background:#002677;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.accordion-title{font-size:12.5px;font-weight:600;color:#1e293b;flex:1}
+.accordion-arrow{color:#94a3b8;font-size:12px}
+.accordion-body{padding:12px 16px;background:#f0fdf4;border-top:1px solid #dcfce7}
+.accordion-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.accordion-sub-title{font-size:10px;font-weight:700;color:#15803d;margin-bottom:4px}
+.accordion-text{font-size:11px;color:#374151;line-height:1.5}
+
+/* Mock Qs */
+.q-card{border:1px solid #e2e8f0;border-radius:12px;margin-bottom:8px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.q-btn{width:100%;display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border:none;background:#fff;cursor:pointer;text-align:left;transition:background .15s}
+.q-btn:hover{background:#eff6ff}
+.q-num{width:24px;height:24px;border-radius:50%;background:#002677;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px}
+.q-text{font-size:12.5px;font-weight:500;color:#1e293b;flex:1;line-height:1.4}
+.q-arrow{color:#94a3b8;font-size:12px;flex-shrink:0}
+.q-answer{padding:12px 14px;background:#f0fdf4;border-top:1px solid #dcfce7;font-size:12px;color:#374151;line-height:1.6}
+.q-answer-label{font-size:10px;font-weight:700;color:#15803d;margin-bottom:6px}
+
+/* Checklist */
+.check-item{display:flex;align-items:flex-start;gap:10px;padding:12px;border:1px solid #e2e8f0;border-radius:10px;cursor:pointer;transition:all .15s;margin-bottom:6px;background:#fff}
+.check-item:hover{background:#eff6ff}
+.check-item.done{background:#f0fdf4;border-color:#bbf7d0}
+.check-item input{width:16px;height:16px;flex-shrink:0;margin-top:1px;accent-color:#002677;cursor:pointer}
+.check-label{font-size:12.5px;color:#374151;line-height:1.4}
+.check-label.done{text-decoration:line-through;color:#94a3b8}
+.progress-bar-bg{background:#e2e8f0;border-radius:20px;height:10px;margin:10px 0}
+.progress-bar{height:10px;border-radius:20px;transition:width .4s,background .4s}
+.filter-btns{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.filter-btn{padding:6px 14px;border-radius:20px;border:none;cursor:pointer;font-size:11px;font-weight:600;background:#f1f5f9;color:#64748b;transition:all .15s}
+.filter-btn:hover{background:#e2e8f0}
+.filter-btn.active{background:#002677;color:#fff}
+
+/* Bottom nav */
+.bottom-nav{display:flex;justify-content:space-between;margin-top:24px;padding-top:16px;border-top:1px solid #e2e8f0}
+.btn-prev{display:flex;align-items:center;gap:6px;padding:8px 14px;border:1px solid #e2e8f0;border-radius:10px;background:#fff;cursor:pointer;font-size:12px;color:#64748b;transition:all .15s}
+.btn-prev:hover{border-color:#002677;color:#002677}
+.btn-next{display:flex;align-items:center;gap:6px;padding:8px 18px;border:none;border-radius:10px;background:#002677;color:#fff;cursor:pointer;font-size:12px;font-weight:600;transition:background .15s}
+.btn-next:hover{background:#0a3d91}
+
+/* Mono block */
+.mono{background:#1e293b;color:#86efac;padding:12px 14px;border-radius:8px;font-family:monospace;font-size:11px;line-height:1.5;margin:10px 0;white-space:pre;overflow-x:auto}
+
+/* Timeline */
+.timeline-item{display:flex;gap:12px;margin-bottom:14px}
+.timeline-date{min-width:88px;font-size:10px;font-weight:700;color:#002677;padding-top:2px}
+.timeline-line{border-left:2px solid #bfdbfe;padding-left:12px;flex:1}
+.timeline-role{font-size:12.5px;font-weight:600;color:#1e293b}
+.timeline-detail{font-size:11px;color:#64748b}
+
+/* Swot */
+.swot-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.swot-cell{border-radius:10px;padding:12px;border:1px solid}
+.swot-s{background:#f0fdf4;border-color:#bbf7d0}.swot-w{background:#fff7ed;border-color:#fed7aa}
+.swot-o{background:#eff6ff;border-color:#bfdbfe}.swot-t{background:#fef2f2;border-color:#fecaca}
+.swot-label{font-size:10px;font-weight:700;margin-bottom:6px}
+.swot-item{font-size:11px;color:#374151;margin-bottom:2px}
+
+/* NS (North Star) */
+.ns-box{background:#002677;color:#fff;border-radius:12px;padding:16px;text-align:center;margin-bottom:12px}
+.ns-label{font-size:10px;color:#93c5fd;margin-bottom:4px}
+.ns-metric{font-size:16px;font-weight:800}
+.ns-sub{font-size:10px;color:#93c5fd;margin-top:4px}
+
+/* Section title */
+.section-title{font-size:22px;font-weight:800;color:#002677;margin-bottom:2px}
+.section-sub{font-size:12px;color:#94a3b8;margin-bottom:18px}
+
+/* Value loop */
+.vloop{display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;background:#eff6ff;border-radius:10px;margin:10px 0;flex-wrap:wrap}
+.vloop-node{background:#002677;color:#fff;padding:6px 14px;border-radius:20px;font-size:11px;font-weight:600}
+.vloop-arrow{color:#002677;font-size:14px;font-weight:700}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState } = React;
+
+const SECTIONS = [
+  { id:"intro",     label:"Introduction",           icon:"👋", short:"0" },
+  { id:"journey",   label:"My Journey",             icon:"🧭", short:"1" },
+  { id:"frameworks",label:"PM Frameworks",           icon:"🧰", short:"2" },
+  { id:"safe",      label:"SAFe & Agile",            icon:"⚙️", short:"3" },
+  { id:"poflow",    label:"PO E2E Flow",             icon:"🔄", short:"4" },
+  { id:"companion", label:"Case Study: Companion",   icon:"🤖", short:"5" },
+  { id:"quickbyte", label:"Case Study: QuickByte",   icon:"🍔", short:"6" },
+  { id:"domain",    label:"UHG/UHC Domain Knowledge", icon:"🏥", short:"7" },
+  { id:"glossary",  label:"Acronym Glossary",         icon:"📖", short:"8" },
+  { id:"mock",      label:"Mock Interview",           icon:"🎯", short:"9"},
+  { id:"checklist", label:"Prep Checklist",           icon:"✅", short:"10"},
+];
+
+const MOCK_QS = [
+  {q:"Walk me through how you'd take a problem from discovery to production.",a:"Use the 14-step PO E2E flow: Business Problem Discovery → Requirement Workshops → AS-IS → TO-BE → Elaboration → Impact Analysis → Prioritization → Backlog Grooming → Estimation → Release Scope → Release Planning → Stakeholder Alignment → Pre-Release Readiness → Go-Live. Lead with the outcome you're achieving at each step, not just the activity."},
+  {q:"You have 10 backlog items and capacity for 3. How do you decide?",a:"3-lens filter: (1) Critical risk/compliance/revenue impact? → prioritise immediately. (2) Highest customer + business impact? → RICE score. (3) Strategic enabler or tech debt? → WSJF at program level. Always communicate the trade-off on the 7 you didn't pick."},
+  {q:"What have you learnt in 4 months that makes you ready to be a PM?",a:"Catalyst 3.0: 70+ hrs structured learning, 2 product case studies (Companion + QuickByte), SAFe POPM cert. Showcase score 64%, storytelling 3/5. I can now own discovery, prioritise a backlog with data, and defend decisions with KPIs."},
+  {q:"One thing that makes you effective as a PM, and one that could derail you?",a:"Strength: Ownership mindset + technical depth — I spot edge cases early and build engineering trust. Weakness I'm fixing: market discovery skills. I now do JTBD interviews, use empathy maps before any user story, and validate assumptions before committing scope."},
+  {q:"Why are you ready for a craft change?",a:"My UHG journey: led end-to-end quality for Companion — defined scope, managed clinical edge cases, drove MVP in 2 months with zero production defects. I was already doing PM work (prioritisation, stakeholder alignment, acceptance criteria, go/no-go calls) without the title. Catalyst formalised the mindset."},
+  {q:"That was your team's impact — what was YOUR individual impact?",a:"I owned end-to-end quality and acceptance criteria for Companion. Defined the validation strategy across clinical journeys + edge cases, embedded automated quality gates in CI/CD (25% release risk reduction), and drove the go-live decision. Intent detection >91% and NPS >70 trace directly to my testing and feedback loops."},
+  {q:"What would you do differently when you become a PM?",a:"Invest more in discovery before writing any acceptance criteria. Most expensive bugs are misunderstood requirements, not code bugs. I'd also establish a North Star metric with the team before the roadmap is set — not after the first sprint."},
+  {q:"A VP gives you a feature request; backlog data says it's low priority. What do you do?",a:"Don't say yes, don't say no. Say: 'Let me show you what we'd deprioritise to fit this in, and what the data says about the trade-off.' Show RICE/WSJF scores, the opportunity cost, and let the VP make an informed call. That's PM leadership — transparent trade-off management."},
+  {q:"Tell me about a product or feature that failed. What broke?",a:"Use STAR. Name the root cause (missed edge case, assumption not validated, stakeholder misalignment). Describe exactly what YOU did vs. what the team did. End with what you changed in your process. The learning is the answer — not the failure itself."},
+  {q:"3 weeks from deadline. Engineering says scope must cut 40%. How?",a:"Run MoSCoW on remaining work immediately. Protect Must Haves tied to the PMF hypothesis. Demote Could Haves. Communicate to stakeholders with a trade-off table: here's what ships, here's what moves to NEXT, here's the impact. Surface it fast — don't absorb the decision alone."},
+  {q:"Given product ownership tomorrow — first thing in week one?",a:"Week 1: stakeholder map, AS-IS analysis, listen to 5 real users, understand the North Star metric and current KPIs. Wouldn't do: write a roadmap. A roadmap without a validated problem statement is fiction."},
+  {q:"How do you define success for a feature before it ships?",a:"Define the KR before any code is written. 'Feature shipped' is not success. Success = '40% of HDHP members check their deductible tracker monthly within 60 days.' If you can't define the measurable outcome upfront, you're not ready to build it."},
+  {q:"Difference between a problem worth solving and one that just feels urgent?",a:"Worth solving = ties to the North Star, validated by data (RICE Reach + Impact both high), affects a real segment. Urgent = loud, one stakeholder's squeaky wheel. Apply: 'If we solve this, which KR moves?' If unclear — it's urgency, not value."},
+  {q:"As an engineer, someone told you what to build. As a PM, nobody will. How?",a:"Discovery + data + customer empathy + strategic alignment. System Thinking: Problem → understand the system → Solution. Direction comes from the gap between current state (AS-IS) and desired outcome, validated by user research. ISIbS: Ignite → Shape → Incubate → Build → Scale."},
+  {q:"Engineering background: advantage or problem?",a:"Advantage: scope realism, catching hidden complexity in estimates, tighter acceptance criteria, engineering trust. Problem: jumping to 'how to build it' before validating 'should we build it at all.' I consciously hold off on technical solutioning until the problem is fully framed."},
+  {q:"You're the PM with no direct reports. How do you lead?",a:"Influence without authority. Clear priorities backed by data, transparent trade-offs, regular stakeholder alignment, psychological safety for the team to push back, and being the person who unblocks — not who bottlenecks. SAFe Alignment principle: everyone rowing in the same direction doesn't require a hierarchy."},
+  {q:"Take a product you used in the last 24 hours. One thing it should stop doing.",a:"Structure: Name the product → identify friction (JTBD) → state what creates the friction → what stopping it enables. E.g., Teams should stop nesting reply threads inconsistently — it forces users to hunt for context in long channels, breaking the 'get caught up quickly' job."},
+  {q:"Suggest 3 improvements to Microsoft Teams.",a:"(1) Smart meeting summaries auto-pinned to channel — job: catch up without watching the recording. (2) Unified search across chats + channels + files. (3) Intent-based notification filtering — only surface messages requiring action. Metric each one: task completion rate, time-to-find, notification-to-action ratio."},
+  {q:"How do you work with actuarial on benefit design?",a:"Bring member/provider research + competitive benchmarking. They bring claims data models. Agree on success metric upfront: PMPM reduction, retention, or Stars improvement. If cost doesn't pencil out, revisit scope — not push harder. Best designs come from member empathy + actuarial rigour together."},
+  {q:"Walk me through how a claim gets processed end to end.",a:"Provider submits via EDI 837 → clearinghouse (Change Healthcare) routes → UHC adjudication checks eligibility, network status, prior auth, benefit rules → if approved: EOB generated, provider paid via EDI 835, member billed balance → if denied: denial code sent, appeal rights communicated. Your cost estimator, deductible tracker, and prior auth status features all sit on top of this flow."},
+];
+
+const CHECKLIST = [
+  {id:"c1",text:"Rehearse SWOT + Journey as a 90-second spoken narrative"},
+  {id:"c2",text:"Companion numbers cold: $57M cost · 50% no-escalation · $5M/$30M savings · 91% intent accuracy"},
+  {id:"c3",text:"QuickByte numbers cold: £17B TAM · £5-7B SAM · 22 vs 11/15 strategic score"},
+  {id:"c4",text:"EPIC → Feature → User Story hierarchy — draw from memory"},
+  {id:"c5",text:"WSJF, RICE, MoSCoW — explain each with a worked example in <60 seconds"},
+  {id:"c6",text:"HIPAA 3 rules + PO 14-step flow — sketch from memory"},
+  {id:"c7",text:"Practised Q4, Q8, Q11, Q17 out loud (hardest behavioural/judgment Qs)"},
+  {id:"c8",text:"Prepared 2–3 questions to ask the interviewer"},
+  {id:"c9",text:"SAFe: ABTP values, ART structure, WSJF formula — can recite cold"},
+  {id:"c10",text:"UHG stat ready: $400.3B revenue · 146M individuals · Optum growing 2× faster than UHC"},
+];
+
+// ── Small helpers ──────────────────────────────────────────────────
+function Card({title, accent="#002677", children}){
+  return <div className="card">
+    {title && <div className="card-header" style={{background:accent}}>{title}</div>}
+    <div className="card-body">{children}</div>
+  </div>;
+}
+function Tbl({headers,rows}){
+  return <table className="tbl">
+    <thead><tr>{headers.map((h,i)=><th key={i}>{h}</th>)}</tr></thead>
+    <tbody>{rows.map((r,i)=><tr key={i}>{r.map((c,j)=><td key={j}>{c}</td>)}</tr>)}</tbody>
+  </table>;
+}
+function BottomNav({active, setActive}){
+  const idx = SECTIONS.findIndex(s=>s.id===active);
+  return <div className="bottom-nav">
+    {idx>0
+      ? <button className="btn-prev" onClick={()=>setActive(SECTIONS[idx-1].id)}>← {SECTIONS[idx-1].label}</button>
+      : <div/>}
+    {idx<SECTIONS.length-1
+      ? <button className="btn-next" onClick={()=>setActive(SECTIONS[idx+1].id)}>{SECTIONS[idx+1].label} →</button>
+      : <div className="btn-next" style={{background:"#1f9d55"}}>🎉 All done!</div>}
+  </div>;
+}
+
+// ── SECTIONS ──────────────────────────────────────────────────────
+function Intro(){
+  return <div>
+    <div className="section-title">Introduction</div>
+    <div className="section-sub">Opening self-introduction — rehearse this as a spoken narrative</div>
+
+    <Card title="👋 Spoken Introduction" accent="#002677">
+      <p style={{marginBottom:10}}>Good morning, everyone. This is Arunava. I bring around thirteen years of industry experience across HealthCare, Retail, and Banking, with the last two years focused specifically on product management.</p>
+      <p style={{marginBottom:10}}>In my most recent role at UHG, I led an GenAI-based chatbot product aimed at improving the customer experience while cutting operational costs — costs that were running into the hundreds of thousands of dollars annually. Over three months, we took NPS from near zero to about 85%, which was a big win for the team and a strong signal that the product was solving a real problem.</p>
+      <p style={{marginBottom:10}}>Alongside that, I've continued investing in my own growth — last year I completed SAFe PO/PM certification, including a six-month training program from PS on Product Management.</p>
+      <p>Right now, I'm looking to bring that mix of domain experience and hands-on product leadership into my next assignment.</p>
+    </Card>
+
+    <Card title="🔑 Key Beats to Hit" accent="#1f9d55">
+      <div className="grid2">
+        <div className="callout">🕐 <b>13 years</b> across HealthCare, Retail, Banking — last 2 years in product management</div>
+        <div className="callout green">🤖 <b>GenAI chatbot @ UHG</b> — cut operational costs (100Ks/yr), boosted CX</div>
+        <div className="callout yellow">📈 <b>NPS: ~0 → ~85%</b> in 3 months</div>
+        <div className="callout orange">🎓 <b>SAFe PO/PM certified</b> + 6-month PS Product Management program</div>
+      </div>
+      <div className="callout" style={{marginTop:10}}>💬 <b>Interview tip:</b> Keep this to 45–60 seconds. Lead with breadth (13 yrs, 3 domains), pivot to depth (UHG GenAI win with a number), close with momentum (certifications + what you're looking for next). Let the interviewer's follow-up questions pull out the detail — don't front-load everything.</div>
+    </Card>
+  </div>;
+}
+
+function Journey(){
+  return <div>
+    <div className="section-title">My Product Journey</div>
+    <div className="section-sub">Your personal narrative — told in the right order</div>
+
+    <Card title="📅 Career Timeline" accent="#002677">
+      <div className="timeline-item"><div className="timeline-date">May 2024</div><div className="timeline-line"><div className="timeline-role">UHC — QE Lead</div><div className="timeline-detail">Led validation automation for web-based claim system</div></div></div>
+      <div className="timeline-item"><div className="timeline-date">Dec 2024</div><div className="timeline-line"><div className="timeline-role">Optum UHG — QE Lead</div><div className="timeline-detail">Led QE for AI-enabled Health Chat (Companion) MVP → Go-Live</div></div></div>
+      <div className="timeline-item"><div className="timeline-date">Sep 2025</div><div className="timeline-line"><div className="timeline-role">PS Catalyst Program</div><div className="timeline-detail">Structured product mindset + strategic decision capability</div></div></div>
+      <div className="timeline-item"><div className="timeline-date">Dec 2025</div><div className="timeline-line"><div className="timeline-role">SAFe 6.0 PO/PM Certification</div><div className="timeline-detail">Completed Product Management Certification</div></div></div>
+    </Card>
+
+    <Card title="💡 Personal SWOT" accent="#0a3d91">
+      <div className="swot-grid">
+        <div className="swot-cell swot-s"><div className="swot-label" style={{color:"#15803d"}}>💪 Strengths</div>{"Ownership mindset · Customer empathy · Analytical thinking · Technical skills".split(" · ").map((s,i)=><div key={i} className="swot-item">• {s}</div>)}</div>
+        <div className="swot-cell swot-w"><div className="swot-label" style={{color:"#c2410c"}}>⚠️ Weaknesses</div>{"Executive presentations · Feature prioritisation depth · Market discovery skills (building)".split(" · ").map((s,i)=><div key={i} className="swot-item">• {s}</div>)}</div>
+        <div className="swot-cell swot-o"><div className="swot-label" style={{color:"#1d4ed8"}}>🚀 Opportunities</div>{"Align skillset to PM · AI-driven product innovation · Cross-domain healthcare insights".split(" · ").map((s,i)=><div key={i} className="swot-item">• {s}</div>)}</div>
+        <div className="swot-cell swot-t"><div className="swot-label" style={{color:"#b91c1c"}}>⚡ Threats</div>{"Rapid AI shifts · High expectations for new PMs to deliver measurable outcomes fast".split(" · ").map((s,i)=><div key={i} className="swot-item">• {s}</div>)}</div>
+      </div>
+      <div className="callout" style={{marginTop:10}}>💬 <b>Interview tip:</b> Pair every weakness with the concrete action you're taking — "Feature prioritisation is an area I'm actively building — I now run every backlog through RICE/MoSCoW before committing."</div>
+    </Card>
+
+    <Card title="📊 Impact Created (Quantified)" accent="#1f9d55">
+      <Tbl headers={["Highlight","Metric"]} rows={[
+        ["GenAI Healthcare Chatbot — first-time quality ownership","MVP in 2 months · Go-live in 3 months · 0 production defects"],
+        ["Release & integration risk","↓ 25% via CI/CD quality gates (Azure DevOps, Jenkins)"],
+        ["Manual quality effort","↓ 40% via automation across UI, API, Mobile, Backend"],
+        ["Intent detection accuracy",">91% | Feature adaptability >85% | NPS >70"],
+      ]}/>
+      <div className="callout green">🗣️ <b>Senior PM, UHG:</b> "Your end-to-end ownership of Companion demonstrated a strong product mindset — aligning multiple teams, proactively identifying risks, and driving timely decisions to protect customer impact."</div>
+    </Card>
+
+    <Card title="🌱 Catalyst Learnings — Shift in Mindset" accent="#6366f1">
+      <div className="grid2">
+        <div style={{background:"#eef2ff",borderRadius:10,padding:12}}>
+          <div style={{fontSize:11,fontWeight:700,color:"#4338ca",marginBottom:6}}>Learning Investment</div>
+          {"70+ hrs structured learning · Live sessions with Core Team · 1:1 mentoring with Product Leaders · SAFe POPM Certification · 2 product-framed presentations · Multiple internal case studies".split(" · ").map((s,i)=><div key={i} style={{fontSize:11,color:"#374151",marginBottom:3}}>• {s}</div>)}
+        </div>
+        <div style={{background:"#f0fdf4",borderRadius:10,padding:12}}>
+          <div style={{fontSize:11,fontWeight:700,color:"#15803d",marginBottom:6}}>Measured Outcomes</div>
+          {"Showcase score → 64% · Presentation & storytelling → 3/5 · Improved problem framing · Stronger exec storytelling · KPI/metrics fluency · Roadmap awareness & prioritisation".split(" · ").map((s,i)=><div key={i} style={{fontSize:11,color:"#374151",marginBottom:3}}>• {s}</div>)}
+        </div>
+      </div>
+    </Card>
+
+    <Card title="🔭 Future Roadmap as PM" accent="#374151">
+      {"Own a product module within 12 months · Launch ≥1 AI-driven experiment (Slingshot Agents) within 18 months · Drive feature adoption >70% within 18–24 months · Earn PSPO II within 12 months · Mentor 2 Catalyst aspirants annually".split(" · ").map((s,i)=><div key={i} style={{display:"flex",gap:6,fontSize:12,color:"#374151",marginBottom:6}}><span style={{color:"#002677"}}>→</span>{s}</div>)}
+    </Card>
+
+    <Card title="⭐ STAR Method — Behavioral Answer Structure" accent="#b45309">
+      <Tbl headers={["Letter","What to Cover","Remember"]} rows={[
+        ["S — Situation","Context & why it mattered","Set the scene fast — 2 sentences max"],
+        ["T — Task","Your specific responsibility","What was at stake if YOU didn't act"],
+        ["A — Action","What YOU did","Lead with 'I', not 'we' — be specific"],
+        ["R — Result","Quantified outcome","Numbers, %, $ — always"],
+      ]}/>
+      <div className="callout orange">⚠️ <b>PPT feedback rules:</b> No long intro. Lead with solution/result early. Use storytelling. "I" word first. Don't bury your impact at the end.</div>
+    </Card>
+  </div>;
+}
+
+function Frameworks(){
+  return <div>
+    <div className="section-title">Core PM/PO Frameworks</div>
+    <div className="section-sub">The vocabulary and tools you'll use every day</div>
+
+    <Card title="🏛️ Catalyst 3.0 — UHG's Product Framework" accent="#002677">
+      <Tbl headers={["Pillar","What It Covers"]} rows={[
+        ["Case → Transformation Mindset","The 'why' behind adopting a product mindset at UHC/Optum"],
+        ["ISIbS: Ignite→Shape→Incubate→Build→Scale","5-stage product lifecycle mnemonic — idea sourcing through full rollout"],
+        ["Outcome Obsession","Output vs Outcome · Quantitative vs Qualitative · KRA = Key Result Area"],
+        ["Customer & Value Orientation","Customer centricity · Design thinking · Value proposition = 'promise to customer'"],
+        ["Data & Tech Aptitude","Grounded in real datasets, not assumptions"],
+        ["Strategic & System Thinking","Problem → System Thinking → Solution/Outcome"],
+      ]}/>
+      <div className="callout">💡 <b>Capacity Guardrail:</b> Strategic 35% · Customer Enhancement 20% · Tech Debt 15% · Bugs 15% · DB/Compliance 15%</div>
+    </Card>
+
+    <Card title="🔍 Discovery Toolkit" accent="#0a3d91">
+      <Tbl headers={["Tool","Purpose","UHG/UX Tool"]} rows={[
+        ["Empathy Map","Says/Thinks/Does/Feels — understand customer's world","Mural, Miro"],
+        ["Persona","Representative archetype of target user, grounded in research","Figma, Mural"],
+        ["Customer Journey Map","End-to-end stages a customer moves through","Mural, Rally"],
+        ["Use Case","Specific scenario of user interacting with the system","Jira, Confluence"],
+        ["Value Proposition","The promise to the customer — why use your product?","—"],
+        ["Value Pool","Where the money comes from — revenue sources","—"],
+        ["Value Stream","E2E steps (Ops→Dev) to deliver the value proposition","—"],
+      ]}/>
+    </Card>
+
+    <Card title="⚖️ Prioritization Frameworks — Full Comparison" accent="#1f6b3b">
+      <Tbl headers={["Framework","Formula","Best Used For"]} rows={[
+        ["MoSCoW","Must / Should / Could / Won't have","MVP / release scope definition"],
+        ["RICE","(Reach × Impact × Confidence) ÷ Effort","Data-driven story/epic/feature scoring"],
+        ["Value vs. Effort (2×2)","High/Low Value × High/Low Effort grid","Quick wins vs big bets vs avoid"],
+        ["WSJF","Cost of Delay ÷ Job Size","SAFe/Portfolio-level; Cost of Delay = Business Value + Time Criticality + Risk Reduction"],
+      ]}/>
+      <div className="callout yellow">🎯 <b>3-Lens Prioritization Checklist:</b> (1) Critical risk/compliance/revenue? → immediate. (2) Highest customer + business impact? → RICE. (3) Strategic enabler or tech debt? → WSJF.</div>
+    </Card>
+
+    <Card title="🧮 Worked Example — How Each Score Is Actually Calculated" accent="#0a3d91">
+      <Tbl headers={["Framework","Scale Used","Worked Example"]} rows={[
+        ["RICE","Reach = # users/quarter (raw number) · Impact = 0.25 / 0.5 / 1 / 2 / 3 (minimal→massive) · Confidence = 50% / 80% / 100% · Effort = person-months","Feature reaches 5,000 users/qtr, Impact=2 (high), Confidence=80%, Effort=4 person-months → RICE = (5000 × 2 × 0.8) ÷ 4 = 2,000. Compare this score against other backlog items — higher wins."],
+        ["WSJF","Business Value, Time Criticality, Risk/Opportunity Enablement each scored 1–20 on a Fibonacci-like relative scale (1,2,3,5,8,13,20) · Job Size same 1–20 scale","BV=8, TC=5, RR/OE=3 → Cost of Delay = 16. Job Size=8 → WSJF = 16 ÷ 8 = 2.0. Rank all backlog items by WSJF descending — highest Cost of Delay per unit of size ships first."],
+        ["Value vs. Effort (2×2)","Value scored 1–10 · Effort scored 1–10 (team's relative gut-check, not absolute units)","Value=8, Effort=3 → plots top-left = 'Quick Win' quadrant → prioritise immediately. Value=8, Effort=9 → 'Big Bet' quadrant → needs roadmap discussion, not this sprint."],
+        ["MoSCoW","No numeric scale — categorical buckets only (Must / Should / Could / Won't)","Of 12 backlog items: 5 tagged Must (ships no matter what), 4 Should (ships if capacity allows), 2 Could (nice-to-have, first to cut), 1 Won't (explicitly out of scope this release)."],
+      ]}/>
+      <div className="callout">💡 <b>Interview tip:</b> Don't just recite the formula — walk through one worked example out loud with real-looking numbers. Interviewers are testing whether you've actually used the framework, not memorised it.</div>
+    </Card>
+
+    <Card title="🎯 OKR Anti-Patterns" accent="#7c3aed">
+      <Tbl headers={["Anti-Pattern ❌","Correct Version ✅"]} rows={[
+        ["'Launch Feature X by Q2' (output)","'50% of users adopt Feature X monthly by Q2' (outcome)"],
+        ["'Achieve compliance' (table stakes)","Compliance lives in Definition of Done, not OKR"],
+        ["'Reach 5M app downloads' (vanity)","'3.2M MAU completing ≥1 self-service transaction'"],
+      ]}/>
+      <div style={{fontSize:12,color:"#374151",marginTop:8}}>North Star = single metric capturing core user value. All KRs feed it. E.g., QuickByte: <b>"Monthly Repeat Orders per Active User."</b></div>
+    </Card>
+
+    <Card title="📊 Metrics Glossary" accent="#374151">
+      <Tbl headers={["Metric","Full Form","What It Measures","Calculation Example","Scale"]} rows={[
+        ["NPS","Net Promoter Score","Likelihood to recommend (short-term signal)","% Promoters (score 9–10) − % Detractors (score 0–6), from a sample of 200 respondents → 55% Promoters − 15% Detractors = NPS of 40","-100 to +100"],
+        ["CSAT","Customer Satisfaction Score","Satisfaction with a specific interaction","(# of 4–5 star ratings ÷ Total ratings) × 100 → 340 out of 400 rated 4–5 stars → CSAT = 85%","0–100%"],
+        ["MAU","Monthly Active Users","Unique users active in a month","Count of unique user IDs with ≥1 session in the calendar month → 3.2M distinct users logged in during June","Raw count (no fixed cap)"],
+        ["ROR","Repeat Order Rate","% users placing >1 order","(Users with ≥2 orders in period ÷ Total users who ordered) × 100 → 1,200 of 4,000 ordering users placed 2+ orders → ROR = 30%","0–100%"],
+        ["AOV","Average Order Value","Average $ per order","Total revenue ÷ Total number of orders → $84,000 revenue ÷ 1,050 orders = $80 AOV","Raw $ value (business-specific range)"],
+        ["ANO","Average Number of Orders (per user)","How frequently an average active user transacts in a period","Total orders in period ÷ Total active users in same period → 8,400 orders ÷ 2,100 MAU = 4.0 orders/user/month","Raw count — benchmark typically 0–10 orders/month depending on category"],
+        ["Feature Adaptability","Feature Adaptability Rate","How well a feature performs consistently across different user segments, devices, or contexts (not just overall usage)","(# segments/device-types where feature success rate ≥ target threshold ÷ Total segments tested) × 100 → feature hit the 80%+ success bar on 5 of 6 tested segments (mobile, desktop, 4 age bands) → Feature Adaptability = 83%","0–100% (target is usually ≥80–85% to call a feature 'adaptable')"],
+        ["TAM / SAM / SOM","Total / Serviceable / Obtainable Market","Market sizing layers","TAM = total market $ demand → SAM = % TAM your model can realistically reach (geo/segment/regulatory fit) → SOM = % SAM you can capture in 3 yrs given competition/capacity","Each expressed as $ value; SAM is typically 20–40% of TAM, SOM 5–15% of SAM as a rough sanity check"],
+        ["PMPM","Per Member Per Month","Universal health insurance value unit","Total cost or revenue ÷ (Total members × Total months) → $12M total plan cost ÷ (100,000 members × 12 months) = $10 PMPM","Raw $ value (varies by plan type — $ tens to low hundreds)"],
+      ]}/>
+      <div className="callout">📐 <b>Interview tip:</b> When asked to define success, always state the metric AND the scale/threshold in the same breath — "Feature Adaptability above 80% across all device segments," not just "good feature adaptability." A metric without a target isn't a KR, it's a vibe.</div>
+    </Card>
+  </div>;
+}
+
+function SAFe(){
+  return <div>
+    <div className="section-title">SAFe & Agile Deep Dive</div>
+    <div className="section-sub">From team-level Scrum to enterprise-scale Agile</div>
+
+    <Card title="🏗️ Hierarchy: Team → Program → Solution → Portfolio" accent="#002677">
+      <div className="mono">{`PORTFOLIO  ──  EPIC          (multiple value teams; portfolio level)
+SOLUTION   ──  CAPABILITY    (more than 1 ART)
+PROGRAM    ──  ART           (Agile Release Train) → delivers FEATURES
+TEAM       ──  TEAM          (5-12 people) → delivers USER STORIES`}</div>
+      <Tbl headers={["Backlog Level","Item","Owned By"]} rows={[
+        ["Portfolio Backlog","EPIC","Portfolio Manager / Business Owner"],
+        ["Solution Backlog","Capability","Business Owner"],
+        ["ART / Program Backlog","Feature","PM (Product Manager)"],
+        ["Team Backlog","User Story","PO (Product Owner)"],
+      ]}/>
+    </Card>
+
+    <Card title="⚡ 4 Core SAFe Values — ABTP" accent="#0a3d91">
+      <div className="grid2">
+        {[
+          {v:"A — Alignment",d:"Everyone working toward the same strategic priorities at every level",bg:"#eff6ff",bc:"#bfdbfe",tc:"#1e40af"},
+          {v:"B — Built-in Quality",d:"Quality is everyone's responsibility, embedded throughout — not inspected in at the end",bg:"#f0fdf4",bc:"#bbf7d0",tc:"#15803d"},
+          {v:"T — Transparency",d:"Visible backlogs, progress, and blockers across all levels at all times",bg:"#fefce8",bc:"#fde68a",tc:"#92400e"},
+          {v:"P — Program Execution",d:"Reliable, predictable delivery of working systems every Program Increment",bg:"#fdf4ff",bc:"#e9d5ff",tc:"#6b21a8"},
+        ].map((item,i)=>(
+          <div key={i} style={{background:item.bg,border:`1px solid ${item.bc}`,borderRadius:10,padding:12}}>
+            <div style={{fontWeight:700,fontSize:12,color:item.tc,marginBottom:4}}>{item.v}</div>
+            <div style={{fontSize:11,color:"#374151"}}>{item.d}</div>
+          </div>
+        ))}
+      </div>
+    </Card>
+
+    <Card title="📅 PI Planning Cycle" accent="#1f9d55">
+      <Tbl headers={["Phase","Activities"]} rows={[
+        ["Pre-PI","Business objectives · High-level capacity · Cross-ART risks & features · Top priorities defined"],
+        ["PI Event","Inspect & Adapt → System Demo → Plan for next quarter (teams commit to PI Objectives)"],
+        ["Post-PI","Execution against committed PI Objectives for ~10–12 weeks"],
+      ]}/>
+      <div className="callout"><b>ART:</b> Agile Release Train = 5–12 teams (50–125 individuals), run by an <b>RTE</b> (Release Train Engineer).<br/><b>At UHG:</b> "Not really — no quarterly cross-team PI Planning, no established ART."</div>
+    </Card>
+
+    <Card title="🔄 Lean vs. Agile" accent="#374151">
+      <Tbl headers={["Dimension","Lean","Agile"]} rows={[
+        ["Origin","Toyota Production System — eliminate waste","Iterative software development — respond to change"],
+        ["Focus","Flow efficiency, value stream mapping","Iterative delivery, team collaboration"],
+        ["Key Practice","Gemba (observe the work), Value Stream mapping","Sprints, standups, retrospectives, PI Planning"],
+        ["SAFe Connection","Lean thinking FEEDS Agile values","SAFe = scaled Agile with Lean principles embedded"],
+      ]}/>
+    </Card>
+
+    <Card title="👥 PO vs. PM vs. Client — Value Loop" accent="#4c1d95">
+      <div className="vloop">
+        <div className="vloop-node">TEAM</div><div className="vloop-arrow">⟺</div>
+        <div className="vloop-node">PO / PM</div><div className="vloop-arrow">⟺</div>
+        <div className="vloop-node">CLIENT</div>
+      </div>
+      <Tbl headers={["Dimension","Owner"]} rows={[
+        ["Feasibility (can we build it?)","Team (Engineering)"],
+        ["Viability (is it worth building — ROI?)","PM + Client"],
+        ["Desirability (do users want it?)","PO via discovery"],
+      ]}/>
+      <div className="callout">The PO sits at the intersection — validating all 3 dimensions before committing the team.</div>
+    </Card>
+  </div>;
+}
+
+function POFlow(){
+  const [expanded, setExpanded] = useState(null);
+  const steps = [
+    {n:"1",title:"Business Problem Discovery",goal:"Understand why we're building this & expected outcome",activities:"Meet stakeholders · analyse current process · identify pain points · capture KPIs",deliverable:"Problem statement · Initial scope · Stakeholder map"},
+    {n:"2",title:"Requirement Discovery Workshops",goal:"Convert vague asks into structured understanding",activities:"Conduct workshops · ask discovery questions · challenge assumptions · identify dependencies",deliverable:"Raw requirements · Process understanding · Initial edge cases"},
+    {n:"3",title:"Current State Analysis (AS-IS)",goal:"Understand existing ecosystem before proposing change",activities:"Map current workflows · identify bottlenecks · duplicate steps · system gaps",deliverable:"AS-IS diagrams · Pain-point mapping · Dependency list"},
+    {n:"4",title:"Future State Design (TO-BE)",goal:"Design improved business process",activities:"Collaborate with architects/UX/compliance · define automation points & exception handling",deliverable:"TO-BE process flow · Capability mapping · Functional boundaries"},
+    {n:"5",title:"Requirement Elaboration",goal:"Transform discussions into implementable requirements",activities:"Break into Features→Epics→User Stories→Acceptance Criteria; define business rules, validations, API expectations",deliverable:"Groomed backlog · Structured stories · Dependency tracking"},
+    {n:"6",title:"Impact Analysis",goal:"Understand what changes across the ecosystem",activities:"Coordinate with tech/QA/ops; assess impact on APIs, DBs, UI/UX, security, downstream systems",deliverable:"Impact matrix · Dependency map · Risk identification"},
+    {n:"7",title:"Prioritization",goal:"Decide what gets built first",activities:"Prioritise by business value, regulatory urgency, customer impact, revenue, risk (MoSCoW / WSJF / RICE)",deliverable:"Prioritised backlog · Trade-off documentation"},
+    {n:"8",title:"Backlog Refinement / Grooming",goal:"Prepare stories for development readiness",activities:"Clarify requirements · resolve ambiguities · add missing acceptance criteria · identify technical spikes",deliverable:"Sprint-ready stories · Acceptance criteria · Spikes identified"},
+    {n:"9",title:"Estimation & Feasibility",goal:"Understand delivery effort & technical reality",activities:"Attend estimation sessions · clarify business logic · negotiate scope · understand constraints",deliverable:"Story points · Feasibility notes · Revised scope"},
+    {n:"10",title:"Release Scope Definition",goal:"Finalise what enters the release",activities:"Define MVP, phased rollout, release boundaries, feature toggles, deployment dependencies",deliverable:"Release plan · MVP definition · Feature toggle list"},
+    {n:"11",title:"Release Planning",goal:"Create executable delivery plan",activities:"Coordinate with Scrum/QA/DevOps; sprint allocation, UAT windows, rollback strategy, hypercare plan",deliverable:"Release roadmap · Delivery milestones · Sprint plan"},
+    {n:"12",title:"Stakeholder Alignment",goal:"Prevent surprises",activities:"Continuously communicate scope, risks, blockers, tradeoffs, changes via emails, updates, dashboards",deliverable:"Shared understanding · Escalation log"},
+    {n:"13",title:"Pre-Release Readiness",goal:"Ensure business readiness before deployment",activities:"UAT signoff · business validation · monitoring readiness · training materials",deliverable:"UAT sign-off · Readiness checklist"},
+    {n:"14",title:"Go-Live Decision Support",goal:"Support release confidence",activities:"Final go/no-go input based on readiness checks across all teams",deliverable:"Go-Live confirmation · Monitoring alerts configured"},
+  ];
+  return <div>
+    <div className="section-title">Product Owner End-to-End Flow</div>
+    <div className="section-sub">14 steps from discovery to go-live — tap any step to expand</div>
+    <div className="callout" style={{marginBottom:14}}>💡 <b>Strong POs</b> understand business deeply, predict edge cases, negotiate scope with data, and can explain the full flow to any stakeholder.</div>
+    <div style={{marginBottom:16}}>
+      {steps.map(s=>(
+        <div key={s.n} className="card" style={{marginBottom:6}}>
+          <button className="accordion-btn" onClick={()=>setExpanded(expanded===s.n?null:s.n)}>
+            <div className="accordion-circle">{s.n}</div>
+            <div className="accordion-title">{s.title}</div>
+            <div className="accordion-arrow">{expanded===s.n?"▲":"▼"}</div>
+          </button>
+          {expanded===s.n&&(
+            <div className="accordion-body">
+              <div className="accordion-grid">
+                <div><div className="accordion-sub-title">🎯 Goal</div><div className="accordion-text">{s.goal}</div></div>
+                <div><div className="accordion-sub-title">⚡ PO Activities</div><div className="accordion-text">{s.activities}</div></div>
+                <div><div className="accordion-sub-title">📄 Deliverable</div><div className="accordion-text">{s.deliverable}</div></div>
+              </div>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+    <Card title="⚠️ Weak PO vs. Strong PO" accent="#b45309">
+      <Tbl headers={["Strong PO ✅","Weak PO ❌"]} rows={[
+        ["Understands business deeply & operations","Only writes Jira tickets"],
+        ["Predicts edge cases before engineering hits them","Acts like a requirement courier"],
+        ["Manages stakeholders proactively","Avoids difficult questions"],
+        ["Negotiates scope with data and trade-off transparency","Depends fully on BA/Architect"],
+        ["Can explain the full end-to-end flow to anyone","Can't explain why the feature matters"],
+      ]}/>
+    </Card>
+  </div>;
+}
+
+function Companion(){
+  return <div>
+    <div className="section-title">Case Study A: Companion</div>
+    <div className="section-sub">AI Healthcare Chatbot — UHG/Optum · Your real project</div>
+
+    <Card title="🎯 Problem & Solution" accent="#002677">
+      <div className="grid2">
+        <div style={{background:"#fef2f2",border:"1px solid #fecaca",borderRadius:10,padding:12}}>
+          <div style={{fontWeight:700,fontSize:11,color:"#b91c1c",marginBottom:6}}>Problem (Persona: Sarah, UH Patient)</div>
+          {"Long wait times connecting to a live agent · Simple repetitive questions consume agent time · ~$57M annual operational cost · Poor user experience".split(" · ").map((s,i)=><div key={i} style={{fontSize:11,marginBottom:3}}>• {s}</div>)}
+        </div>
+        <div style={{background:"#f0fdf4",border:"1px solid #bbf7d0",borderRadius:10,padding:12}}>
+          <div style={{fontWeight:700,fontSize:11,color:"#15803d",marginBottom:6}}>Solution: Companion AI Chatbot</div>
+          {"Answers common questions instantly (zero wait) · Self-service for routine tasks · Guides user to right app section · Seamless warm transfer to agent with full context".split(" · ").map((s,i)=><div key={i} style={{fontSize:11,marginBottom:3}}>• {s}</div>)}
+        </div>
+      </div>
+      <div style={{marginTop:8}}><span className="tag tag-blue">Rising digital health demand</span><span className="tag tag-green">Cost optimisation pressure</span><span className="tag tag-purple">AI maturity reached</span></div>
+    </Card>
+
+    <Card title="⭐ Core Value Proposition & Differentiation" accent="#0a3d91">
+      <div style={{fontSize:12.5,color:"#374151",marginBottom:10,lineHeight:1.6}}>Companion delivers instant, personalised, accurate healthcare assistance before users reach a live agent — significantly reducing wait times, agent load, and cost-to-serve.</div>
+      <Tbl headers={["Differentiator","Detail"]} rows={[
+        ["Healthcare-specific intelligence","Benefits, coverage, claims, billing queries handled accurately"],
+        ["Seamless warm transfer","Context passed to agents, lowering AHT (Average Handle Time)"],
+        ["HIPAA-compliant personalisation","Responses use member data within compliant boundaries"],
+        ["Deep UHG integration","Claims, benefits, provider directory — live data"],
+        ["Continuous learning loops","Intent model improves with every interaction"],
+      ]}/>
+    </Card>
+
+    <Card title="📅 Journey: Idea → MVP → Scale" accent="#374151">
+      <Tbl headers={["Q4'25","Q1'26","Q2'26","Q3'26"]} rows={[
+        ["Ideate & Vet · Check budget · Approvals","Backlog prep · Define MVP scope (SoCal, 3M users) · Build & test features","Implement features & bug fixes · E2E testing · 3 major releases","Bug fixes · Continuous enhancements · Plan next release"],
+      ]}/>
+      <div className="callout">🎯 <b>Backlog prioritised using MoSCoW</b> for MVP must-haves → stakeholder alignment reviews with product owners and customer service teams → regular business goal checks.</div>
+      <div style={{fontSize:11,color:"#64748b",marginTop:8}}><b>MVP Scope (Phase 1 — SoCal pilot):</b> Companion base UI + integration · FAQ/query handling + intent recognition · warm transfer to live agent</div>
+    </Card>
+
+    <Card title="📊 Impact — Envisioned & Realized" accent="#1f9d55">
+      <Tbl headers={["Metric","Target"]} rows={[
+        ["Interactions without escalation (SoCal, Feb 2026)","50%"],
+        ["CSAT improvement","↑ (instant response vs wait queue)"],
+        ["Operational cost savings (post-MVP)","$5M"],
+        ["Operational cost savings (by 2026)","$30M"],
+      ]}/>
+    </Card>
+
+    <Card title="🏢 UHG Scale Context" accent="#6b7280">
+      <Tbl headers={["Metric","Value"]} rows={[
+        ["UHG unique customers","146M (Dec 2024)"],
+        ["Optum unique customers","~100M"],
+        ["Active MVP rollout cohort","~3M"],
+        ["Target % using self-service","~70% by 2025"],
+        ["Chats / agent / hour","~12.1"],
+        ["Annual support cost","~$57M (≈5% of total cost)"],
+      ]}/>
+    </Card>
+
+    <Card title="🤖 RAG vs. LLM — Why It Matters" accent="#4c1d95">
+      <Tbl headers={["Approach","Definition","Why Companion Used RAG"]} rows={[
+        ["LLM (Large Language Model)","General-purpose language model trained on broad data","Risk: hallucination on claims-specific facts — unacceptable in healthcare"],
+        ["RAG (Retrieval Augmented Generation)","Grounds responses in UHG's actual claims/benefits/provider data before generating","Reduces hallucination · stays within UHG's authoritative data boundary · HIPAA-safe"],
+      ]}/>
+    </Card>
+
+    <div style={{background:"#f0fdf4",border:"1px solid #bbf7d0",borderRadius:12,padding:14}}>
+      <div style={{fontWeight:700,fontSize:12,color:"#15803d",marginBottom:8}}>💡 Key Interview Follow-ups</div>
+      <div style={{fontSize:11.5,color:"#374151",lineHeight:1.6}}><b>Q: How did you protect PHI in an AI chatbot?</b><br/>→ Personalisation uses member data only within a HIPAA-compliant boundary; no PHI surfaces in logs/notifications outside authenticated sessions.<br/><br/><b>Q: What's your ROI framework?</b><br/>→ ROI after AI = Lowered total cost of ownership. Compare: total investment vs benefits in $ (cost-to-serve reduction + escalation reduction).<br/><br/><b>Q: What was your most difficult decision as QE lead?</b><br/>→ Use STAR — name a specific go/no-go call or scope debate, and your role in resolving it.</div>
+    </div>
+  </div>;
+}
+
+function QuickByte(){
+  return <div>
+    <div className="section-title">Case Study B: QuickByte</div>
+    <div className="section-sub">Sustainable Food Delivery Platform for Urban UK · Catalyst project</div>
+
+    <Card title="🍔 Company Snapshot" accent="#c2410c">
+      <div className="grid3">
+        <div><b style={{fontSize:11}}>Snapshot:</b><p style={{fontSize:11,color:"#64748b",marginTop:2}}>London-based foodtech startup, pre-launch, pilot in selected London boroughs</p></div>
+        <div><b style={{fontSize:11}}>Mission:</b><p style={{fontSize:11,color:"#64748b",marginTop:2}}>Fresh, diverse, affordable meals in 30 min — empowering local food businesses through ethical tech</p></div>
+        <div><b style={{fontSize:11}}>Vision:</b><p style={{fontSize:11,color:"#64748b",marginTop:2}}>UK's most trusted community-driven food delivery platform — speed, sustainability, local culinary talent</p></div>
+      </div>
+    </Card>
+
+    <div className="grid2">
+      <Card title="📊 Market Sizing" accent="#002677">
+        <Tbl headers={["Market","Value"]} rows={[
+          ["TAM — UK Food Delivery","£17B (projected 2026)"],
+          ["SAM — Urban Ethical Delivery","£5B – £7B"],
+          ["SOM — Phase 1, London","~£10M annual revenue · ~2% UK market"],
+          ["Current market share","0.5% (2025)"],
+        ]}/>
+      </Card>
+      <Card title="📱 Current Digital Stats" accent="#0a3d91">
+        <Tbl headers={["Metric","Now","2026 Target"]} rows={[
+          ["App Downloads","25,000","30,000"],
+          ["MAU","8,000","10,000"],
+          ["Checkout conversion","48%","60%"],
+          ["Repeat order rate (3-mo)","30%","40%"],
+          ["iOS rating","4.1/5","4.5★"],
+        ]}/>
+      </Card>
+    </div>
+
+    <Card title="⭐ North Star Framework" accent="#0a3d91">
+      <div className="ns-box">
+        <div className="ns-label">NORTH STAR METRIC</div>
+        <div className="ns-metric">Monthly Repeat Orders per Active User</div>
+        <div className="ns-sub">Driving Sustainable Growth through Repeat Behavior</div>
+      </div>
+      <div className="grid3">
+        {[
+          {l:"Demand",items:["New Users","Repeat Users"]},
+          {l:"Experience",items:["Avg Delivery Time","ETA Accuracy"]},
+          {l:"Supply",items:["Active Restaurants","Active Riders"]},
+        ].map((d,i)=>(
+          <div key={i} style={{background:"#f8fafc",border:"1px solid #e2e8f0",borderRadius:8,padding:10,textAlign:"center"}}>
+            <div style={{fontWeight:700,fontSize:11,color:"#002677",marginBottom:6}}>{d.l}</div>
+            {d.items.map((item,j)=><div key={j} style={{fontSize:11,color:"#64748b"}}>• {item}</div>)}
+          </div>
+        ))}
+      </div>
+    </Card>
+
+    <Card title="🚨 Problem Statement — 4 Pain Points" accent="#dc2626">
+      <Tbl headers={["Pain Point","Data","Business Impact"]} rows={[
+        ["Limited Choice & Discovery","60%+ can't find diverse options · No personalization","↓ Order Conversion · High Cart Abandonment"],
+        ["High Delivery Cost","35-40% of orders have hidden fees","↓ Affordability · Less Repeat Orders"],
+        ["Unreliable Delivery","Avg 40-45 min · No real-time tracking","↓ Customer Trust · Low Retention"],
+        ["Poor App Experience","20% app crashes · Complicated checkout","↑ Drop-offs · Negative Reviews"],
+      ]}/>
+    </Card>
+
+    <Card title="👤 Persona: Arav Sharma — 'The Modern Foodie'" accent="#374151">
+      <div className="grid2">
+        <div>
+          <div style={{fontSize:11,color:"#64748b",marginBottom:8}}>25 yrs, marketing professional in London. Values fast, reliable, ethical food delivery.</div>
+          <Tbl headers={["Pain Point","Behaviour"]} rows={[
+            ["Discovery Friction","5-7 min browsing, no personalization"],
+            ["Checkout Sensitivity","Abandons on unexpected price increase"],
+            ["Reliability Anxiety","Avoids peak hours due to unpredictability"],
+            ["App Glitches","Exits after payment friction"],
+          ]}/>
+        </div>
+        <div style={{background:"#f8fafc",border:"1px solid #e2e8f0",borderRadius:10,padding:12}}>
+          <div style={{fontWeight:700,fontSize:11,marginBottom:8}}>Empathy Map</div>
+          <div className="grid2" style={{gap:6}}>
+            {[
+              {q:"Says","a":"'Where is my food?' · 'I want more local options'"},
+              {q:"Thinks","a":"'I hope my order arrives hot and fresh'"},
+              {q:"Does","a":"Browses, tracks status, reads reviews before ordering"},
+              {q:"Feels","a":"Frustrated by delays · Excited by new food choices"},
+            ].map((item,i)=>(
+              <div key={i} style={{background:"#fff",border:"1px solid #e2e8f0",borderRadius:6,padding:8}}>
+                <div style={{fontWeight:700,fontSize:10,color:"#002677",marginBottom:2}}>{item.q}</div>
+                <div style={{fontSize:10,color:"#64748b"}}>{item.a}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </Card>
+
+    <Card title="🏆 Strategic Choice: Trust & Sustainability (Score: 22 vs 15 vs 11)" accent="#1f9d55">
+      <Tbl headers={["Criteria","Discount Model","Speed Model","Trust & Sustainability ✓"]} rows={[
+        ["Margin Impact","Low","Medium","High"],
+        ["Differentiation","Weak","Moderate","Strong"],
+        ["Long-term Retention","Low","Medium","High"],
+        ["Brand Positioning","Commodity","Fast","Premium-Trust"],
+        ["Total Score","11","15","22 ✓"],
+      ]}/>
+      <div className="callout green">QuickByte will compete on Trust & Sustainability — not discount wars.</div>
+    </Card>
+
+    <Card title="🗺️ Roadmap: NOW / NEXT / LATER" accent="#0a3d91">
+      <Tbl headers={["EPIC","NOW (0-3 mo)","NEXT (3-9 mo)","LATER (9-18 mo)"]} rows={[
+        ["Food Discovery","Personalized feed · Dietary filters · Trending options · Visual menus","Smart recommendations · Search optimisation","AI personalisation · Predictive ordering"],
+        ["Reliable Delivery","Accurate ETA · Live tracking · Proactive alerts · Customer support","Dynamic ETA prediction · Smart routing","Autonomous deliveries · Demand forecasting"],
+        ["Trust & Sustainability","Hygiene ratings · Ingredient sourcing · Trust badges","Carbon footprint indicators","Supply chain transparency · ESG reporting"],
+        ["Riders & Vendors","Leverage existing pilot features","Earnings & pricing tools","Vendor performance insights"],
+      ]}/>
+    </Card>
+
+    <Card title="📈 PMF Signals & Risk Mitigations" accent="#374151">
+      <div className="grid2">
+        <Tbl headers={["PMF Signal","How Measured","Target"]} rows={[
+          ["Repeat Rate","30-day retention",">40%"],
+          ["NPS","Post-delivery survey",">50"],
+          ["Vendor Retention","3-month retention",">80%"],
+          ["Rider Churn","Monthly churn","<15%"],
+        ]}/>
+        <Tbl headers={["Risk","Mitigation","Success Metric"]} rows={[
+          ["High CAC","Hyperlocal GTM + Referral","CAC < £20"],
+          ["Vendor/Rider Churn","Guaranteed earnings + Incentives","Churn < 15%"],
+          ["Fast Scaling","Phased rollout","On-time delivery > 85%"],
+        ]}/>
+      </div>
+    </Card>
+  </div>;
+}
+
+function Domain(){
+  const [tab, setTab] = React.useState("overview");
+  const tabs = [
+    {id:"overview", label:"Overview & Fundamentals"},
+    {id:"ei", label:"E&I (Employer & Individual)"},
+    {id:"mr", label:"Medicare & Retirement"},
+    {id:"cs", label:"Community & State"},
+    {id:"global", label:"Global"},
+    {id:"plans", label:"Plan Types by Segment"},
+  ];
+  return <div>
+    <div className="section-title">UHG/UHC Domain Knowledge</div>
+    <div className="section-sub">Health insurance fundamentals + every insurance line UHC operates — full breakdown</div>
+
+    <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:14}}>
+      {tabs.map(t=>(
+        <button key={t.id} onClick={()=>setTab(t.id)}
+          style={{padding:"6px 12px",borderRadius:20,border:"none",cursor:"pointer",fontSize:11,fontWeight:600,
+            background:tab===t.id?"#002677":"#f1f5f9",color:tab===t.id?"#fff":"#64748b",transition:"all .15s"}}>
+          {t.label}
+        </button>
+      ))}
+    </div>
+
+    {tab==="overview" && <div>
+    <Card title="🏢 UHG Corporate Structure" accent="#002677">
+      <Tbl headers={["Business","What It Does"]} rows={[
+        ["UnitedHealthcare (UHC)","Insurance plans — Commercial (E&I), Medicare Advantage, Medicaid"],
+        ["Optum Health","Care delivery — 90,000+ employed/affiliated physicians, care management programs"],
+        ["Optum Rx","Pharmacy Benefit Manager — formulary, mail-order, rebate negotiation"],
+        ["Optum Insight","Data, analytics, Change Healthcare clearinghouse (~15B transactions/year)"],
+        ["Optum Financial","HSA/FSA/HRA administration (Optum Bank)"],
+      ]}/>
+      <div className="callout">📊 <b>FY2024:</b> UHG $400.3B revenue (+8% YoY) · UHC $298.2B · Optum $253B (growing 2× faster) · 146M unique individuals served = 1 in 3 Americans touch a UHG product.</div>
+    </Card>
+
+    <Card title="📋 Plan Types" accent="#0a3d91">
+      <Tbl headers={["Type","Referral?","OON Coverage?","UHC Example"]} rows={[
+        ["HMO","Yes — PCP required","No (emergency only)","AARP Medicare Advantage HMO; Community Plan (Medicaid)"],
+        ["PPO","No","Yes, at higher cost","UHC Choice Plus — flagship large-employer product"],
+        ["EPO","No","No (emergency only)","Common on ACA Marketplace plans"],
+        ["HDHP","Varies","Varies","Always paired with HSA at Optum Bank"],
+        ["POS","Yes, for specialists","Yes, at higher cost","Mid-tier employer option"],
+      ]}/>
+    </Card>
+
+    <Card title="💰 Benefits Architecture" accent="#1f9d55">
+      <div className="mono">{`Member gets a service
+       → Preventive? ──YES──> $0 cost (ACA mandate)
+       ↓ NO
+Deductible met? ──NO──> Member pays 100%
+       ↓ YES
+Copay (flat fee) OR Coinsurance (%) applies
+       ↓
+OOP Max hit? ──YES──> Insurance pays 100% for rest of year`}</div>
+      <Tbl headers={["Term","UHC Example"]} rows={[
+        ["Premium","Employer pays ~70-80%, employee 20-30%"],
+        ["Deductible","Choice Plus PPO: $1,500 individual — resets Jan 1"],
+        ["Copay","PCP $25 · Specialist $50 · Urgent Care $75 · ER $350"],
+        ["Coinsurance","80/20 — UHC pays 80%, member pays 20%"],
+        ["OOP Maximum","2024 ACA cap: $9,450 individual / $18,900 family"],
+      ]}/>
+    </Card>
+
+    <Card title="📜 Key Regulations" accent="#374151">
+      <Tbl headers={["Regulation","What It Mandates","PM Implication"]} rows={[
+        ["ACA — EHB","10 required coverage categories","Hard constraint in any benefit-configuration tool"],
+        ["ACA — MLR (80/20)","≥80% of premium must go to medical care","Every tech investment must show ROI within the 20% admin budget"],
+        ["HIPAA","Protects PHI — Privacy, Security, Breach Notification rules","PIA + Security review in every DoD; RBAC + audit logging in every PHI-touching story"],
+        ["No Surprises Act (2022)","Protects against unexpected OON bills","Created whole new product surface — cost estimator + IDR tooling"],
+        ["ERISA","Governs employer self-funded (ASO) plans","State mandates may not apply — compliance must verify per plan"],
+      ]}/>
+      <div className="callout orange">⚠️ <b>HIPAA in 1 line:</b> If you can identify WHO the patient is from the data, it's PHI. Push notifications never carry diagnosis info. Every PHI-touching story needs RBAC + audit logging in acceptance criteria.</div>
+    </Card>
+
+    <Card title="⭐ CMS Star Ratings — A Strategy Driver" accent="#b45309">
+      <Tbl headers={["Star Rating","CMS Bonus","Business Impact at UHC Scale"]} rows={[
+        ["5 Stars","+5% on all CMS payments","Highest tier — massive revenue premium"],
+        ["4–4.5 Stars","+3.5% bonus","Moving 3.5→4 stars ≈ $2.9B additional annual revenue"],
+        ["3.5 Stars","No bonus","Baseline — no CMS quality premium"],
+        ["Below 3 Stars","Risk of plan termination","Existential for the MA product"],
+      ]}/>
+      <div className="callout yellow">🎯 A PM's KR is never "send 500K notifications." It's "increase diabetic eye-exam completion from 68% to 76%" — that's the actual Stars lever worth hundreds of millions.</div>
+    </Card>
+    </div>}
+
+    <div style={{background:"#002677",borderRadius:12,padding:14,marginBottom:14,color:"#fff",display: tab==="overview"?"none":"block"}}>
+      <div style={{fontSize:11,color:"#93c5fd",marginBottom:6,fontWeight:600}}>UHC STRUCTURE AT A GLANCE</div>
+      <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+        {["Employer & Individual (E&I)","Medicare & Retirement (M&R)","Community & State (C&S)","Global"].map((s,i)=>(
+          <div key={i} style={{background:"rgba(255,255,255,0.15)",borderRadius:8,padding:"6px 12px",fontSize:11,fontWeight:600}}>{s}</div>
+        ))}
+      </div>
+    </div>
+
+    {tab==="ei" && <div>
+      <Card title="1️⃣ Employer & Individual (E&I) — Commercial Insurance" accent="#002677">
+        <div style={{fontSize:12,color:"#374151",marginBottom:10,lineHeight:1.6}}>
+          Serves employers (large/small) and individuals buying insurance directly. UHC's biggest commercial segment. Plans sold through brokers (Mercer, Aon, Willis Towers Watson) for large employers, or direct/agent for small and individual.
+        </div>
+        <Tbl headers={["Sub-Segment","Who","Plan Types","Key Note"]} rows={[
+          ["Large Group (51+ employees)","Corporations, large employers","PPO (Choice Plus), HMO (Choice), EPO, POS, HDHP","Often self-funded/ASO — employer bears insurance risk, UHC just administers"],
+          ["Small Group (2–50 employees)","Small businesses","HMO, PPO, EPO, HDHP + HSA","Fully-insured — UHC bears the risk"],
+          ["Individual & Family Plans (IFP)","Direct-to-consumer","HMO (most common), EPO, PPO, HDHP","On-exchange (Healthcare.gov) or off-exchange. ACA subsidies apply on-exchange only"],
+        ]}/>
+        <div className="callout">
+          <b>UHC exited ACA exchanges in 2016</b> citing adverse selection losses, then selectively re-entered some states. Strong interview discussion point — why the largest insurer exited the individual market (unpredictable risk pools, margin pressure).
+        </div>
+        <Tbl headers={["Fully-Insured vs. ASO","Fully-Insured","ASO (Administrative Services Only)"]} rows={[
+          ["Who bears risk","UHC bears the insurance risk","Employer bears the insurance risk"],
+          ["UHC's role","Full insurer — sets premiums, pays claims","Administrator only — processes claims, provides network access"],
+          ["Regulation","State insurance law applies","ERISA governs — state mandates often don't apply"],
+          ["Common for","Small group, individual plans","Large employers (Fortune 500)"],
+          ["Revenue model","Premium revenue","Per-employee admin fee"],
+        ]}/>
+      </Card>
+    </div>}
+
+    {tab==="mr" && <div>
+      <Card title="2️⃣ Medicare & Retirement (M&R) — Government / Seniors 65+" accent="#0a3d91">
+        <div style={{fontSize:12,color:"#374151",marginBottom:10,lineHeight:1.6}}>
+          Serves seniors (65+) on Medicare. <b>UHC is the #1 Medicare Advantage insurer in the US</b> with ~7–8 million MA members. Most plans are AARP-branded under a licensing deal with AARP.
+        </div>
+        <Tbl headers={["Product","What It Is","Plan Types","Key Fact"]} rows={[
+          ["Medicare Advantage (MA / Part C)","Private insurance alternative to traditional Medicare. CMS pays UHC a monthly capitation per member.","HMO (most common · lowest premium · often $0), PPO (more flexibility), HMO-POS (hybrid)","Stars Ratings directly affect CMS bonus payments — moving 3.5→4.0 stars ≈ $2.9B additional revenue annually"],
+          ["Special Needs Plans (SNPs)","MA plans designed for specific populations","D-SNP (Dual eligible — Medicare + Medicaid), C-SNP (Chronic conditions — diabetes, CHF), I-SNP (Institutional — nursing homes)","Highest-complexity, highest-cost members — SDOH coordination is critical"],
+          ["Medicare Supplement (Medigap)","Fills gaps in traditional Medicare (deductibles, coinsurance, OOP)","Plan F, Plan G, Plan N","AARP-branded · No network restrictions · Member sees any Medicare-accepting provider"],
+          ["Medicare Part D (Prescription Drug Plan)","Standalone Rx coverage or integrated into MA-PD plans","Standalone PDP or bundled with MA","AARP MedicareRx · Medication adherence is a CMS Stars measure"],
+        ]}/>
+        <div className="callout">
+          <b>MA vs Traditional Medicare (PM perspective):</b> Traditional Medicare = government-run, no app, no OOP max, no supplemental benefits. MA = private (UHC), member app (myUHC), OOP max, dental/vision/gym supplemental benefits, Stars-driven product decisions.
+        </div>
+      </Card>
+    </div>}
+
+    {tab==="cs" && <div>
+      <Card title="3️⃣ Community & State (C&S) — Medicaid / Government Low-Income" accent="#1f9d55">
+        <div style={{fontSize:12,color:"#374151",marginBottom:10,lineHeight:1.6}}>
+          Serves low-income individuals and families through government-contracted Medicaid programs. UHC's Medicaid arm is <b>UnitedHealthcare Community Plan</b>, operating in 30+ states.
+        </div>
+        <Tbl headers={["Product","Who It Serves","Plan Type","Key Note"]} rows={[
+          ["Medicaid Managed Care","Low-income adults and families — state-contracted","HMO (dominant) · PAHP (Prepaid Ambulatory Health Plan) · PIHP (Prepaid Inpatient)","States pay UHC a monthly PMPM to manage care. UHC must meet state quality metrics."],
+          ["CHIP (Children's Health Insurance Program)","Low-income children whose families earn too much for Medicaid","HMO","Federally funded, state-administered"],
+          ["Long Term Services & Supports (LTSS)","Elderly and disabled members needing long-term care","Managed care","Includes home health, nursing facilities, community-based services"],
+          ["Behavioral Health Medicaid Programs","Members with mental health / SUD needs","Carved-in or carved-out depending on state","SUD = Substance Use Disorder — ACA mandates coverage as an Essential Health Benefit"],
+          ["Dual Eligible (D-SNP)","Members on BOTH Medicare AND Medicaid","HMO / D-SNP","Highest complexity — need coordinated medical + social care. SDOH interventions critical."],
+        ]}/>
+        <div className="callout green">
+          <b>Product design note for Medicaid:</b> Members are often lower-income, lower digital literacy, primarily on low-end Android devices, multilingual. Features that work for a commercial PPO member may completely fail for a Medicaid member. Design standards are different.
+        </div>
+      </Card>
+    </div>}
+
+    {tab==="global" && <div>
+      <Card title="4️⃣ Global — International Insurance" accent="#374151">
+        <div style={{fontSize:12,color:"#374151",marginBottom:10,lineHeight:1.6}}>
+          UHC operates internationally through acquisitions and partnerships. Smaller segment but growing.
+        </div>
+        <Tbl headers={["Market","Operation","Note"]} rows={[
+          ["Brazil","Amil — acquired by UHG in 2012","Largest private health insurer in Brazil"],
+          ["Latin America","Various country operations","Health plan management, health services"],
+          ["Expat / Global Employers","International health plans for globally mobile employees","Coverage across multiple countries"],
+        ]}/>
+      </Card>
+    </div>}
+
+    {tab==="plans" && <div>
+      <Card title="Plan Types — Where Each Lives Across Segments" accent="#002677">
+        <Tbl headers={["Plan Type","Large Group","Small Group","IFP / ACA","Medicare Advantage","Medicaid"]} rows={[
+          ["HMO","Common","Common","Most common","Most common","Dominant"],
+          ["PPO","Most popular","Common","Less common","Common","Rare"],
+          ["EPO","Available","Available","Common","Not used","Not used"],
+          ["POS","Available","Less common","Rare","Limited","Not used"],
+          ["HDHP + HSA","Growing fast","Available","Available","Not offered","Not offered"],
+          ["D-SNP","N/A","N/A","N/A","Yes — for dual eligibles","N/A (Medicare side)"],
+        ]}/>
+        <div className="callout">
+          <b>Key insight:</b> Plan types are <i>product configurations</i>, not business units. UHC doesn't have an "HMO Division." Each segment offers a menu of plan types — the same HMO structure looks very different at $0 premium MA vs. a corporate large-group plan.
+        </div>
+      </Card>
+
+      <Card title="Cost-Sharing by Plan Type — Quick Comparison" accent="#0a3d91">
+        <Tbl headers={["Feature","HMO","PPO","EPO","HDHP","POS"]} rows={[
+          ["PCP Required?","Yes","No","No","No","Yes"],
+          ["Referral for Specialist?","Yes","No","No","No","Yes (in-network)"],
+          ["Out-of-Network Covered?","No*","Yes (higher cost)","No*","Varies","Yes (higher cost)"],
+          ["Premium","Lowest","Highest","Low-Medium","Lowest","Medium"],
+          ["Deductible","Low","Medium","Medium","Very High","Medium"],
+          ["Pairs with HSA?","No","No","No","Yes — required","No"],
+          ["Best for...","Cost-conscious, prefer managed care","Flexibility seekers","No-referral but in-network only","Healthy / high-earner with HSA","Middle ground"],
+        ]}/>
+        <div style={{fontSize:10,color:"#94a3b8",marginTop:4}}>* Emergency care always covered regardless of network status (ACA mandate)</div>
+      </Card>
+
+      <Card title="UHC Branded Product Names — Know These" accent="#374151">
+        <Tbl headers={["Brand / Product Name","Segment","What It Is"]} rows={[
+          ["UnitedHealthcare Choice","Large/Small Group","HMO product — in-network only, PCP required"],
+          ["UnitedHealthcare Choice Plus","Large Group","PPO product — flagship employer plan, most enrolled"],
+          ["UnitedHealthcare Options PPO","Large Group","PPO variant with broader network options"],
+          ["UnitedHealthcare Navigate","Large Group","POS product — PCP + limited OON option"],
+          ["AARP Medicare Advantage","Medicare & Retirement","UHC's MA plans sold under AARP brand (licensing deal)"],
+          ["UnitedHealthcare Community Plan","Community & State","Medicaid managed care brand — 30+ states"],
+          ["myUHC / myUHC.com","All segments","Member portal + mobile app — digital self-service hub"],
+          ["Optum Rx","All segments (Pharmacy)","PBM — manages formulary, mail-order, Rx benefits"],
+          ["Optum Bank","All segments (Financial)","HSA/FSA/HRA administration"],
+          ["Rally Health","E&I / MA","Member wellness and engagement platform (acquired, integrated into myUHC)"],
+          ["Jarvis","Broker-facing","Broker quoting portal — used by brokers to generate employer plan quotes"],
+        ]}/>
+      </Card>
+    </div>}
+  </div>;
+}
+
+function Mock(){
+  const [revealed, setRevealed] = useState({});
+  const [filter, setFilter] = useState("all");
+  const cats = {
+    all: MOCK_QS,
+    behavioral: MOCK_QS.slice(2,10),
+    strategy: MOCK_QS.slice(10,16),
+    domain: MOCK_QS.slice(16,20),
+  };
+  const qs = cats[filter];
+  const allRev = qs.every((_,i)=>revealed[`${filter}-${i}`]);
+  return <div>
+    <div className="section-title">Mock Interview Question Bank</div>
+    <div className="section-sub">Tap a question to reveal the answer approach</div>
+    <div className="filter-btns">
+      {[["all","All 20"],["behavioral","Behavioural"],["strategy","Strategy & Judgment"],["domain","Domain"]].map(([k,l])=>(
+        <button key={k} className={`filter-btn${filter===k?" active":""}`} onClick={()=>{setFilter(k);setRevealed({})}}>{l}</button>
+      ))}
+      <button className="filter-btn" style={{marginLeft:"auto"}} onClick={()=>{
+        if(allRev){setRevealed({});}
+        else{const a={};qs.forEach((_,i)=>{a[`${filter}-${i}`]=true;});setRevealed(a);}
+      }}>{allRev?"Hide All":"Reveal All"}</button>
+    </div>
+    <div>
+      {qs.map((item,i)=>{
+        const key=`${filter}-${i}`;
+        const open=revealed[key];
+        return <div key={key} className="q-card">
+          <button className="q-btn" onClick={()=>setRevealed(r=>({...r,[key]:!r[key]}))}>
+            <div className="q-num">{i+1}</div>
+            <div className="q-text">{item.q}</div>
+            <div className="q-arrow">{open?"▲":"▼"}</div>
+          </button>
+          {open&&<div className="q-answer"><div className="q-answer-label">💡 Answer Approach</div>{item.a}</div>}
+        </div>;
+      })}
+    </div>
+  </div>;
+}
+
+function Checklist(){
+  const [checked, setChecked] = useState({});
+  const done = Object.values(checked).filter(Boolean).length;
+  const pct = Math.round((done/CHECKLIST.length)*100);
+  return <div>
+    <div className="section-title">Final Prep Checklist</div>
+    <div className="section-sub">Track your readiness before the interview</div>
+    <div style={{marginBottom:16}}>
+      <div style={{display:"flex",justifyContent:"space-between",fontSize:12,marginBottom:6}}>
+        <span style={{fontWeight:600,color:"#374151"}}>Overall Readiness</span>
+        <span style={{fontWeight:700,color:"#002677"}}>{done}/{CHECKLIST.length} — {pct}%</span>
+      </div>
+      <div className="progress-bar-bg">
+        <div className="progress-bar" style={{width:`${pct}%`,background:pct===100?"#1f9d55":"#002677"}}/>
+      </div>
+      {pct===100&&<div style={{textAlign:"center",color:"#1f9d55",fontWeight:700,fontSize:13,marginTop:8}}>🎉 You're ready. Go get it.</div>}
+    </div>
+    <div>
+      {CHECKLIST.map(item=>(
+        <label key={item.id} className={`check-item${checked[item.id]?" done":""}`}>
+          <input type="checkbox" checked={!!checked[item.id]} onChange={()=>setChecked(c=>({...c,[item.id]:!c[item.id]}))}/>
+          <span className={`check-label${checked[item.id]?" done":""}`}>{item.text}</span>
+        </label>
+      ))}
+    </div>
+    <Card title="🎯 3 Questions to Ask the Interviewer" accent="#374151">
+      <ul style={{paddingLeft:16,fontSize:12.5,color:"#374151",lineHeight:2}}>
+        <li>"How does the PM team here balance regulatory compliance timelines with innovation velocity?"</li>
+        <li>"What does the first 90 days look like for a PM transitioning from a technical background?"</li>
+        <li>"How does your team measure product success beyond delivery — what's the North Star metric for this product area?"</li>
+      </ul>
+    </Card>
+  </div>;
+}
+
+// ── APP ──────────────────────────────────────────────────────────
+
+function Glossary(){
+  const [search, setSearch] = React.useState("");
+  const [cat, setCat] = React.useState("all");
+
+  const terms = [
+    // Health Insurance & Clinical
+    {a:"UHG",f:"UnitedHealth Group",d:"Parent holding company — owns UHC + Optum",c:"insurance"},
+    {a:"UHC",f:"UnitedHealthcare",d:"The insurance arm of UHG — commercial, MA, Medicaid plans",c:"insurance"},
+    {a:"E&I",f:"Employer & Individual",d:"UHC's commercial segment serving employers and individual buyers",c:"insurance"},
+    {a:"M&R",f:"Medicare & Retirement",d:"UHC segment serving seniors 65+ via Medicare Advantage and supplements",c:"insurance"},
+    {a:"C&S",f:"Community & State",d:"UHC's Medicaid/government segment — UnitedHealthcare Community Plan",c:"insurance"},
+    {a:"IFP",f:"Individual & Family Plan",d:"ACA plans bought directly by individuals, on or off exchange (Healthcare.gov)",c:"insurance"},
+    {a:"MA",f:"Medicare Advantage",d:"Private insurance alternative to traditional Medicare — UHC is #1 insurer with ~7-8M members",c:"insurance"},
+    {a:"HMO",f:"Health Maintenance Organization",d:"Requires PCP selection and referrals; in-network only (emergency exception)",c:"insurance"},
+    {a:"PPO",f:"Preferred Provider Organization",d:"No referral needed; in-network or out-of-network allowed (OON costs more)",c:"insurance"},
+    {a:"EPO",f:"Exclusive Provider Organization",d:"No referral needed but strictly in-network only (like HMO strictness + PPO flexibility)",c:"insurance"},
+    {a:"POS",f:"Point of Service",d:"Hybrid of HMO + PPO; PCP required but limited OON access allowed",c:"insurance"},
+    {a:"HDHP",f:"High Deductible Health Plan",d:"Low premium, very high deductible ($1,600+ individual). Always pairs with HSA.",c:"insurance"},
+    {a:"SNP",f:"Special Needs Plan",d:"MA plan designed for specific populations (D-SNP, C-SNP, I-SNP)",c:"insurance"},
+    {a:"D-SNP",f:"Dual Special Needs Plan",d:"MA plan for members on both Medicare AND Medicaid — highest complexity population",c:"insurance"},
+    {a:"C-SNP",f:"Chronic Condition Special Needs Plan",d:"MA plan for members with specific chronic conditions (diabetes, CHF, COPD)",c:"insurance"},
+    {a:"CHIP",f:"Children's Health Insurance Program",d:"Government insurance for low-income children whose families earn too much for Medicaid",c:"insurance"},
+    {a:"MCO",f:"Managed Care Organization",d:"Company (like UHC Community Plan) that manages Medicaid care on behalf of the state",c:"insurance"},
+    {a:"PCP",f:"Primary Care Physician",d:"Main doctor who coordinates a member's care — required in HMO/POS plans",c:"insurance"},
+    {a:"HSA",f:"Health Savings Account",d:"Tax-free account to pay medical costs — only available with HDHP plans. Administered by Optum Bank.",c:"insurance"},
+    {a:"FSA",f:"Flexible Spending Account",d:"Tax-free medical spending account — use it or lose it each year",c:"insurance"},
+    {a:"HRA",f:"Health Reimbursement Arrangement",d:"Employer-funded account to reimburse employee medical expenses",c:"insurance"},
+    {a:"OOP / OOP Max",f:"Out of Pocket / Out of Pocket Maximum",d:"What member pays (not insurance). ACA cap 2024: $9,450 individual / $18,900 family",c:"insurance"},
+    {a:"EOB",f:"Explanation of Benefits",d:"Document showing what insurance paid on a claim and what the member owes",c:"insurance"},
+    {a:"EOC",f:"Evidence of Coverage",d:"Full legal document explaining all plan benefits, rules, and exclusions",c:"insurance"},
+    {a:"EHB",f:"Essential Health Benefits",d:"10 categories ACA requires ALL individual/small group plans to cover (ambulatory, emergency, maternity, mental health, Rx, etc.)",c:"insurance"},
+    {a:"SDOH",f:"Social Determinants of Health",d:"Non-medical factors affecting health — food security, housing, transportation, education, economic stability",c:"insurance"},
+    {a:"SUD",f:"Substance Use Disorder",d:"Drug/alcohol dependency — covered as an Essential Health Benefit under ACA",c:"insurance"},
+    {a:"PHI",f:"Protected Health Information",d:"Any data that identifies a patient + relates to their health. Governed by HIPAA. 18 identifiers.",c:"compliance"},
+    {a:"ePHI",f:"Electronic Protected Health Information",d:"PHI stored or transmitted digitally — subject to HIPAA Security Rule",c:"compliance"},
+    {a:"Rx",f:"Prescription",d:"Shorthand for prescription drugs",c:"insurance"},
+    {a:"PBM",f:"Pharmacy Benefit Manager",d:"Manages drug formularies, rebate negotiation, pharmacy networks (Optum Rx is UHG's PBM)",c:"insurance"},
+    {a:"A1c",f:"Glycated Hemoglobin Test",d:"Blood test measuring average blood sugar over 3 months — key HEDIS diabetes measure",c:"insurance"},
+    // Claims & Operations
+    {a:"EDI",f:"Electronic Data Interchange",d:"Standardized electronic messages exchanged between payers, providers, clearinghouses",c:"claims"},
+    {a:"EDI 837",f:"HIPAA Transaction Set 837",d:"Electronic claim submission from provider to payer (through clearinghouse)",c:"claims"},
+    {a:"EDI 835",f:"HIPAA Transaction Set 835",d:"Electronic remittance advice — payer tells provider what was paid and why",c:"claims"},
+    {a:"EDI 270",f:"HIPAA Transaction Set 270",d:"Eligibility inquiry — provider asks 'Is this patient covered?'",c:"claims"},
+    {a:"EDI 271",f:"HIPAA Transaction Set 271",d:"Eligibility response — payer answers with benefit details",c:"claims"},
+    {a:"EDI 278",f:"HIPAA Transaction Set 278",d:"Prior authorization request and response between provider and payer",c:"claims"},
+    {a:"PA / Prior Auth",f:"Prior Authorization",d:"Payer approval required before certain treatments/procedures are covered",c:"claims"},
+    {a:"FFS",f:"Fee for Service",d:"Provider paid per procedure performed — incentivises volume over outcomes",c:"claims"},
+    {a:"VBC",f:"Value Based Care",d:"Provider paid based on health outcomes achieved, not volume — incentivises keeping members healthy",c:"claims"},
+    {a:"ASO",f:"Administrative Services Only",d:"UHC administers claims/network for self-funded employers who bear the insurance risk",c:"claims"},
+    {a:"PMPM",f:"Per Member Per Month",d:"The universal health insurance unit. Total Cost ÷ Members ÷ Months. Used to pitch product value.",c:"claims"},
+    {a:"MLR",f:"Medical Loss Ratio",d:"% of premium spent on actual medical care. ACA minimum: 80% individual/small group, 85% large group.",c:"claims"},
+    {a:"HCC",f:"Hierarchical Condition Category",d:"Diagnosis coding system CMS uses for risk adjustment in MA — more documented conditions = higher CMS payment",c:"claims"},
+    {a:"AR",f:"Accounts Receivable",d:"Money owed to providers by payers — Days in AR is a key provider satisfaction metric",c:"claims"},
+    {a:"FCR",f:"First Call Resolution",d:"% of member/provider calls resolved without a callback or transfer — key call center metric",c:"claims"},
+    {a:"AHT",f:"Average Handle Time",d:"Average time a call center agent spends on a call — key operational efficiency metric",c:"claims"},
+    {a:"EOB",f:"Explanation of Benefits",d:"Document showing what insurance paid and what member owes — top source of member confusion",c:"claims"},
+    // Compliance & Regulatory
+    {a:"ACA",f:"Affordable Care Act",d:"2010 federal law reforming US health insurance — mandates EHBs, MLR, guaranteed issue, no pre-existing condition denial",c:"compliance"},
+    {a:"HIPAA",f:"Health Insurance Portability and Accountability Act",d:"1996 federal law protecting PHI privacy and security. Three rules: Privacy, Security, Breach Notification.",c:"compliance"},
+    {a:"ERISA",f:"Employee Retirement Income Security Act",d:"Governs employer-sponsored health plans. Self-funded plans under ERISA can preempt state insurance mandates.",c:"compliance"},
+    {a:"COBRA",f:"Consolidated Omnibus Budget Reconciliation Act",d:"Allows employees to continue employer health coverage after job loss — member pays full premium + 2% admin fee",c:"compliance"},
+    {a:"CMS",f:"Centers for Medicare & Medicaid Services",d:"Federal agency that regulates Medicare and Medicaid — sets MA benefit requirements, Stars methodology, prior auth rules",c:"compliance"},
+    {a:"DOI",f:"Department of Insurance",d:"State-level regulator for fully-insured commercial health plans — varies by state",c:"compliance"},
+    {a:"DOJ",f:"Department of Justice",d:"Federal agency — investigates healthcare fraud, antitrust issues (e.g., UHG acquisitions)",c:"compliance"},
+    {a:"PIA",f:"Privacy Impact Assessment",d:"Review of how a feature handles member data — required before launching any PHI-touching feature at UHC",c:"compliance"},
+    {a:"RBAC",f:"Role Based Access Control",d:"Controls which data each user role can see — critical for HIPAA Minimum Necessary Standard",c:"compliance"},
+    {a:"BAA",f:"Business Associate Agreement",d:"Legal contract required before sharing PHI with any external vendor or partner",c:"compliance"},
+    {a:"IDR",f:"Independent Dispute Resolution",d:"Arbitration process under No Surprises Act when payer and provider can't agree on OON payment",c:"compliance"},
+    {a:"TLS",f:"Transport Layer Security",d:"Encryption standard for data in transit — required by HIPAA Security Rule (minimum TLS 1.2)",c:"compliance"},
+    // FHIR & Tech
+    {a:"FHIR",f:"Fast Healthcare Interoperability Resources",d:"Modern REST/JSON API standard for health data exchange — CMS mandated for all payers (Patient Access APIs)",c:"tech"},
+    {a:"HL7",f:"Health Level 7",d:"Older healthcare data exchange standard — complex, inconsistently implemented; being replaced by FHIR",c:"tech"},
+    {a:"API",f:"Application Programming Interface",d:"Defined way two software systems exchange data — 'how systems talk to each other'",c:"tech"},
+    {a:"RAG",f:"Retrieval Augmented Generation",d:"AI technique that grounds LLM responses in a specific data source — used in Companion to prevent hallucination",c:"tech"},
+    {a:"LLM",f:"Large Language Model",d:"AI model trained on vast text data (e.g., GPT-4) — general purpose, risks hallucination in specific domains",c:"tech"},
+    {a:"AEO",f:"Answer Engine Optimisation",d:"Optimising content to appear as direct AI-generated answers (vs SEO = Search Engine Optimisation)",c:"tech"},
+    {a:"CI/CD",f:"Continuous Integration / Continuous Delivery",d:"DevOps pipeline automating code integration and deployment — quality gates embedded here reduce release risk",c:"tech"},
+    // Quality & Stars
+    {a:"HEDIS",f:"Healthcare Effectiveness Data and Information Set",d:"Standardised set of health plan quality measures managed by NCQA — used to compute CMS Star Ratings",c:"quality"},
+    {a:"CAHPS",f:"Consumer Assessment of Healthcare Providers and Systems",d:"Member experience survey used directly in CMS Star Ratings — 'getting needed care', 'customer service' etc.",c:"quality"},
+    {a:"HOS",f:"Health Outcomes Survey",d:"Measures physical and mental health improvements in MA members — feeds Star Ratings",c:"quality"},
+    {a:"Stars",f:"CMS Star Ratings",d:"1–5 star CMS quality rating for MA plans. 4+ stars earns a bonus payment. Moving 3.5→4 ≈ $2.9B annually for UHC.",c:"quality"},
+    {a:"NCQA",f:"National Committee for Quality Assurance",d:"Organisation that administers HEDIS measures and accredits health plans",c:"quality"},
+    {a:"PDC",f:"Proportion of Days Covered",d:"Medication adherence metric — % of days a member has their chronic Rx medication available. Key Stars measure.",c:"quality"},
+    // PM & Agile
+    {a:"PM",f:"Product Manager",d:"Owns product strategy, roadmap, and business outcomes — answers 'Are we building the right thing?'",c:"pm"},
+    {a:"PO",f:"Product Owner",d:"Owns sprint backlog, user stories, and delivery execution — answers 'Are we building the thing right?'",c:"pm"},
+    {a:"PRD",f:"Product Requirements Document",d:"Document describing what to build, for whom, why, and how success is measured",c:"pm"},
+    {a:"MVP",f:"Minimum Viable Product",d:"Smallest version of a product that delivers real value and validates the core hypothesis",c:"pm"},
+    {a:"JTBD",f:"Jobs To Be Done",d:"Framework: 'When I [situation], I want to [motivation], so I can [outcome].' Focuses on user intent not features.",c:"pm"},
+    {a:"OST",f:"Opportunity Solution Tree",d:"Visual framework: Outcome → Opportunities (unmet needs) → Solutions → Experiments. Forces problem-first thinking.",c:"pm"},
+    {a:"OKR",f:"Objectives and Key Results",d:"Goal-setting: Objective (direction) + 2-5 measurable Key Results (proof of progress)",c:"pm"},
+    {a:"KR",f:"Key Result",d:"A specific, measurable outcome that proves the Objective was achieved — never an output ('launched feature')",c:"pm"},
+    {a:"KPI",f:"Key Performance Indicator",d:"Ongoing metric tracking business/product performance",c:"pm"},
+    {a:"KRA",f:"Key Result Area",d:"Broad area where results are expected — used in Catalyst 3.0 Outcome Obsession framework",c:"pm"},
+    {a:"RICE",f:"Reach × Impact × Confidence ÷ Effort",d:"Prioritisation scoring framework. Higher score = higher priority. Good for story/epic/feature level.",c:"pm"},
+    {a:"WSJF",f:"Weighted Shortest Job First",d:"SAFe prioritisation: Cost of Delay ÷ Job Size. Portfolio/program level decisions.",c:"pm"},
+    {a:"MoSCoW",f:"Must Should Could Won't",d:"Prioritisation categories — Must Have (MVP essential), Should Have (high value), Could Have (nice), Won't Have (out of scope this cycle)",c:"pm"},
+    {a:"RACI",f:"Responsible Accountable Consulted Informed",d:"Stakeholder responsibility matrix. One person is Accountable per row — the PM is usually A for most decisions.",c:"pm"},
+    {a:"DoD",f:"Definition of Done",d:"Checklist every story must meet before it's considered complete — includes HIPAA/compliance gates at UHC",c:"pm"},
+    {a:"DoR",f:"Definition of Ready",d:"Checklist a story must meet before it's pulled into a sprint — acceptance criteria, dependencies identified",c:"pm"},
+    {a:"NPS",f:"Net Promoter Score",d:"Likelihood to recommend metric (-100 to +100). Short-term customer satisfaction signal.",c:"pm"},
+    {a:"CSAT",f:"Customer Satisfaction Score",d:"Post-interaction satisfaction rating — specific to a single touchpoint",c:"pm"},
+    {a:"MAU",f:"Monthly Active Users",d:"Unique users who performed at least one action in a given month",c:"pm"},
+    {a:"DAU",f:"Daily Active Users",d:"Unique users active in a single day",c:"pm"},
+    {a:"AOV",f:"Average Order Value",d:"Average dollar value per order — key e-commerce/QuickByte metric",c:"pm"},
+    {a:"ANO",f:"Average Number of Orders",d:"Average orders placed per user in a time period",c:"pm"},
+    {a:"ROR",f:"Repeat Order Rate",d:"% of users who place more than one order — key retention signal",c:"pm"},
+    {a:"TAM",f:"Total Addressable Market",d:"Total potential revenue if you captured 100% of the market",c:"pm"},
+    {a:"SAM",f:"Serviceable Addressable Market",d:"Portion of TAM you can realistically serve given your positioning and capabilities",c:"pm"},
+    {a:"SOM",f:"Serviceable Obtainable Market",d:"Portion of SAM you can realistically capture in the near term",c:"pm"},
+    {a:"CAC",f:"Customer Acquisition Cost",d:"Total cost to acquire one new customer — key QuickByte risk (target: CAC < £20)",c:"pm"},
+    {a:"GTM",f:"Go-To-Market",d:"Strategy for launching a product to market — target segment, channels, pricing, messaging",c:"pm"},
+    {a:"PMF",f:"Product-Market Fit",d:"The degree to which a product satisfies a strong market demand — validated by repeat rate, NPS, retention",c:"pm"},
+    {a:"PR/FAQ",f:"Press Release / Frequently Asked Questions",d:"Amazon's 'working backwards' product strategy doc — write the launch press release before building",c:"pm"},
+    {a:"STAR",f:"Situation Task Action Result",d:"Behavioural interview answer framework — always lead with 'I' not 'we', end with quantified result",c:"pm"},
+    {a:"SWOT",f:"Strengths Weaknesses Opportunities Threats",d:"Strategic analysis framework — used in personal narrative and product/business analysis",c:"pm"},
+    // SAFe
+    {a:"SAFe",f:"Scaled Agile Framework",d:"Framework for scaling Agile across large enterprises like UHC — Team → Program → Solution → Portfolio",c:"safe"},
+    {a:"PI",f:"Program Increment",d:"~10-12 week planning and delivery cycle in SAFe — replaces traditional quarterly planning",c:"safe"},
+    {a:"ART",f:"Agile Release Train",d:"5–12 teams (50–125 people) aligned to a common mission — primary SAFe delivery vehicle",c:"safe"},
+    {a:"RTE",f:"Release Train Engineer",d:"SAFe's equivalent of a 'Chief Scrum Master' for the ART — facilitates PI Planning, removes impediments",c:"safe"},
+    {a:"ABTP",f:"Alignment Built-in-quality Transparency Program-execution",d:"The 4 core values of SAFe — the mnemonic to remember them",c:"safe"},
+    {a:"PCAT",f:"Portfolio/Capability Allocation Tool",d:"Portfolio-level tool tracking capability and solution backlog items across multiple ARTs",c:"safe"},
+    {a:"ISIbS",f:"Ignite Shape Incubate Build Scale",d:"Catalyst 3.0 product lifecycle mnemonic — the 5 stages from idea to full scale",c:"safe"},
+    // UHG Specific
+    {a:"myUHC",f:"—",d:"UHC's member portal and mobile app — digital self-service hub for all UHC members",c:"uhg"},
+    {a:"Companion",f:"—",d:"UHG/Optum's AI healthcare chatbot — first point of contact for member queries, reduces live agent load",c:"uhg"},
+    {a:"Jarvis",f:"—",d:"UHC's broker quoting portal — used by brokers to generate and compare employer plan quotes",c:"uhg"},
+    {a:"AARP",f:"American Association of Retired Persons",d:"UHC has a brand licensing deal with AARP — Medicare Advantage plans sold under the AARP name",c:"uhg"},
+  ];
+
+  const cats = [
+    {id:"all",label:"All"},
+    {id:"insurance",label:"Insurance"},
+    {id:"claims",label:"Claims & Ops"},
+    {id:"compliance",label:"Compliance"},
+    {id:"tech",label:"Tech & AI"},
+    {id:"quality",label:"Quality & Stars"},
+    {id:"pm",label:"PM & Product"},
+    {id:"safe",label:"SAFe & Agile"},
+    {id:"uhg",label:"UHG Specific"},
+  ];
+
+  const filtered = terms.filter(t=>{
+    const matchCat = cat==="all" || t.c===cat;
+    const q = search.toLowerCase();
+    const matchSearch = !q || t.a.toLowerCase().includes(q) || t.f.toLowerCase().includes(q) || t.d.toLowerCase().includes(q);
+    return matchCat && matchSearch;
+  });
+
+  return <div>
+    <div className="section-title">Acronym Glossary</div>
+    <div className="section-sub">{terms.length} terms — search or filter by category</div>
+
+    <div style={{display:"flex",gap:8,marginBottom:12,alignItems:"center"}}>
+      <input
+        value={search} onChange={e=>setSearch(e.target.value)}
+        placeholder="Search acronym, full form, or meaning..."
+        style={{flex:1,padding:"8px 12px",border:"1px solid #e2e8f0",borderRadius:10,fontSize:12,outline:"none"}}
+      />
+      {search && <button onClick={()=>setSearch("")} style={{padding:"6px 12px",border:"1px solid #e2e8f0",borderRadius:8,background:"#fff",cursor:"pointer",fontSize:11,color:"#64748b"}}>Clear</button>}
+    </div>
+
+    <div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:14}}>
+      {cats.map(c=>(
+        <button key={c.id} onClick={()=>setCat(c.id)}
+          style={{padding:"5px 11px",borderRadius:20,border:"none",cursor:"pointer",fontSize:10.5,fontWeight:600,
+            background:cat===c.id?"#002677":"#f1f5f9",color:cat===c.id?"#fff":"#64748b",transition:"all .15s"}}>
+          {c.label}
+        </button>
+      ))}
+    </div>
+
+    <div style={{fontSize:11,color:"#94a3b8",marginBottom:10}}>{filtered.length} terms</div>
+
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
+      {filtered.map((t,i)=>(
+        <div key={i} style={{background:"#fff",border:"1px solid #e2e8f0",borderRadius:10,padding:"10px 12px",boxShadow:"0 1px 2px rgba(0,0,0,.03)"}}>
+          <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:6,marginBottom:4}}>
+            <span style={{fontWeight:800,fontSize:13,color:"#002677"}}>{t.a}</span>
+            <span style={{fontSize:9,fontWeight:600,padding:"2px 6px",borderRadius:10,background:"#f1f5f9",color:"#64748b",whiteSpace:"nowrap",flexShrink:0}}>{cats.find(c=>c.id===t.c)?.label}</span>
+          </div>
+          <div style={{fontSize:11,fontWeight:600,color:"#374151",marginBottom:3}}>{t.f}</div>
+          <div style={{fontSize:10.5,color:"#64748b",lineHeight:1.4}}>{t.d}</div>
+        </div>
+      ))}
+    </div>
+    {filtered.length===0 && <div style={{textAlign:"center",padding:40,color:"#94a3b8",fontSize:13}}>No terms found for "{search}"</div>}
+  </div>;
+}
+
+
+const CONTENT = {
+  intro:<Intro/>, journey:<Journey/>, frameworks:<Frameworks/>, safe:<SAFe/>,
+  poflow:<POFlow/>, companion:<Companion/>, quickbyte:<QuickByte/>,
+  domain:<Domain/>, glossary:<Glossary/>,
+  mock:<Mock/>, checklist:<Checklist/>,
+};
+
+function App(){
+  const [active, setActive] = useState("intro");
+  const [open, setOpen] = useState(true);
+  const sec = SECTIONS.find(s=>s.id===active);
+  return (
+    <div className="app">
+      <div className={`sidebar ${open?"open":"closed"}`}>
+        <div className="sidebar-header">
+          <div className="sidebar-logo">PM</div>
+          {open&&<div><div className="sidebar-title">PM/PO Interview Guide</div><div className="sidebar-sub">UHG · Catalyst · SAFe</div></div>}
+          <button className="toggle-btn" onClick={()=>setOpen(o=>!o)}>{open?"◀":"▶"}</button>
+        </div>
+        <nav className="nav">
+          {SECTIONS.map(s=>(
+            <button key={s.id} className={`nav-btn${active===s.id?" active":""}`} onClick={()=>setActive(s.id)}>
+              <span className="nav-icon">{s.icon}</span>
+              {open&&<span className="nav-label">{s.label}</span>}
+            </button>
+          ))}
+        </nav>
+        {open&&<div className="sidebar-footer">UHG · Optum · Publicis Sapient</div>}
+      </div>
+
+      <div className="main">
+        <div className="topbar">
+          <div className="topbar-icon">{sec?.icon}</div>
+          <div>
+            <div className="topbar-title">{sec?.label}</div>
+            <div className="topbar-sub">Section {sec?.short} of {SECTIONS.length}</div>
+          </div>
+          <div className="dot-nav">
+            {SECTIONS.map(s=>(
+              <button key={s.id} className={`dot${active===s.id?" active":""}`} title={s.label} onClick={()=>setActive(s.id)}>{s.short}</button>
+            ))}
+          </div>
+        </div>
+        <div className="content">
+          <div className="content-inner">
+            {CONTENT[active]}
+            <BottomNav active={active} setActive={setActive}/>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>

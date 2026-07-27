@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>How AI Actually Works: Flow & Landscape</title>
+<style>
+  :root{
+    --bg: #0d1117;
+    --panel: #131a24;
+    --line: #263241;
+    --ink: #e8edf3;
+    --dim: #8a97a8;
+    --ai: #3b4b63;
+    --ml: #2f6f6b;
+    --nlp: #5a82b4;
+    --dl: #2f8f7a;
+    --gen: #3fae84;
+    --llm: #55c48a;
+    --agent: #f0a860;
+    --step: #4f8ff0;
+    --accent: #f0a860;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family: 'Iowan Old Style','Georgia',serif;
+    padding: 40px 20px 80px;
+  }
+  h1{
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-weight:700;
+    font-size: 28px;
+    letter-spacing:-0.02em;
+    text-align:center;
+    margin: 0 0 6px;
+  }
+  .subtitle{
+    text-align:center;
+    color:var(--dim);
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size:14px;
+    margin-bottom:46px;
+  }
+  .section-label{
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    text-transform:uppercase;
+    letter-spacing:0.14em;
+    font-size:11px;
+    color:var(--accent);
+    text-align:center;
+    margin: 60px 0 22px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    max-width:900px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+  .section-label::before,.section-label::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:var(--line);
+  }
+
+  /* ===== FLOW ===== */
+  .flow{
+    max-width: 920px;
+    margin: 0 auto;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  .flow-row{
+    display:flex;
+    align-items:stretch;
+    gap:0;
+    width:100%;
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+  .node{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:14px 16px;
+    width: 210px;
+    text-align:center;
+    position:relative;
+  }
+  .node .num{
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-size:10px;
+    color:var(--step);
+    letter-spacing:0.1em;
+    margin-bottom:4px;
+    font-weight:700;
+  }
+  .node .title{
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-weight:700;
+    font-size:14.5px;
+    margin-bottom:5px;
+  }
+  .node .desc{
+    font-size:12.5px;
+    color:var(--dim);
+    line-height:1.45;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+  }
+  .arrow-down{
+    color:var(--step);
+    font-size:20px;
+    margin: 6px 0;
+    line-height:1;
+  }
+  .branch-wrap{
+    display:flex;
+    gap:18px;
+    justify-content:center;
+    flex-wrap:wrap;
+    width:100%;
+  }
+  .branch-wrap .node{ width:190px; }
+
+  .loop-note{
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-size:12px;
+    color:var(--agent);
+    text-align:center;
+    max-width:520px;
+    margin: 4px auto 0;
+    line-height:1.5;
+  }
+
+  /* ===== HIERARCHY (nested boxes) ===== */
+  .nest{
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 28px;
+    border-radius: 16px;
+    border: 1.5px solid var(--ai);
+    background: rgba(59,75,99,0.12);
+  }
+  .nest-label{
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-weight:700;
+    font-size:13px;
+    color: var(--ink);
+    margin-bottom: 18px;
+  }
+  .nest-label .tag{
+    font-size:10px;
+    color:var(--dim);
+    font-weight:400;
+    display:block;
+    margin-top:2px;
+  }
+  .nest-ml{
+    padding:22px;
+    border-radius:14px;
+    border:1.5px solid var(--ml);
+    background: rgba(47,111,107,0.14);
+  }
+  .nest-nlp{
+    padding:22px;
+    border-radius:13px;
+    border:1.5px solid var(--nlp);
+    background: rgba(90,130,180,0.14);
+  }
+  .nest-dl{
+    padding:20px;
+    border-radius:12px;
+    border:1.5px solid var(--dl);
+    background: rgba(47,143,122,0.16);
+  }
+  .nest-gen{
+    padding:18px;
+    border-radius:10px;
+    border:1.5px solid var(--gen);
+    background: rgba(63,174,132,0.18);
+  }
+  .nest-llm{
+    padding:16px 18px;
+    border-radius:9px;
+    border:1.5px solid var(--llm);
+    background: rgba(85,196,138,0.2);
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-size:13px;
+    font-weight:700;
+    text-align:center;
+  }
+  .nest-llm .examples{
+    font-weight:400;
+    color:var(--dim);
+    font-size:11.5px;
+    margin-top:4px;
+  }
+  .side-examples{
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-size:11px;
+    color:var(--dim);
+    font-weight:400;
+    margin-top:2px;
+  }
+
+  /* vision branch chip */
+  .vision-branch{
+    margin-top:16px;
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .chip{
+    flex:1;
+    min-width:150px;
+    background: rgba(240,168,96,0.12);
+    border:1px solid var(--agent);
+    border-radius:8px;
+    padding:10px 12px;
+    font-family:'Helvetica Neue', Arial, sans-serif;
+  }
+  .chip .t{ font-weight:700; font-size:12.5px; margin-bottom:2px;}
+  .chip .d{ font-size:11px; color:var(--dim); line-height:1.4;}
+
+  /* ===== AGENT ANATOMY ===== */
+  .agent-wrap{
+    max-width: 780px;
+    margin: 0 auto;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  .agent-core{
+    background: rgba(240,168,96,0.15);
+    border: 1.5px solid var(--agent);
+    border-radius: 14px;
+    padding: 18px 26px;
+    text-align:center;
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-weight:700;
+    font-size:14px;
+    margin-bottom:22px;
+  }
+  .agent-core .sub{
+    font-weight:400;
+    color:var(--dim);
+    font-size:11.5px;
+    margin-top:3px;
+  }
+  .agent-grid{
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap:14px;
+    width:100%;
+    max-width:640px;
+  }
+  .agent-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:12px 14px;
+    font-family:'Helvetica Neue', Arial, sans-serif;
+  }
+  .agent-card .t{
+    font-weight:700;
+    font-size:12.5px;
+    color:var(--agent);
+    margin-bottom:3px;
+  }
+  .agent-card .d{
+    font-size:11.5px;
+    color:var(--dim);
+    line-height:1.45;
+  }
+  .cycle-note{
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-size:11.5px;
+    color:var(--dim);
+    text-align:center;
+    margin-top:16px;
+    max-width:560px;
+  }
+
+  .axis-title{
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-weight:700;
+    font-size:12.5px;
+    text-align:center;
+    margin: 34px 0 14px;
+    color:var(--ink);
+  }
+  .axis-grid{
+    display:grid;
+    grid-template-columns: 140px 1fr 1fr;
+    gap:10px;
+    max-width:680px;
+    width:100%;
+    font-family:'Helvetica Neue', Arial, sans-serif;
+  }
+  .axis-cell{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:12px 13px;
+  }
+  .axis-cell.head{
+    background:transparent;
+    border:none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    font-weight:700;
+    font-size:12px;
+    color:var(--agent);
+    padding:6px;
+  }
+  .axis-cell.rowhead{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    font-weight:700;
+    font-size:12px;
+    color:var(--agent);
+    background:transparent;
+    border:none;
+  }
+  .axis-cell .t{ font-weight:700; font-size:12.5px; margin-bottom:4px;}
+  .axis-cell .d{ font-size:11px; color:var(--dim); line-height:1.4; margin-bottom:5px;}
+  .axis-cell .ex{ font-size:10.5px; color:var(--llm); font-style:italic; }
+
+  @media (max-width:600px){
+    .axis-grid{ grid-template-columns: 1fr; }
+    .axis-cell.head, .axis-cell.rowhead{ display:none; }
+    .axis-cell:not(.head):not(.rowhead)::before{
+      content: attr(data-label);
+      display:block;
+      font-weight:700;
+      color:var(--agent);
+      font-size:10.5px;
+      margin-bottom:6px;
+      text-transform:uppercase;
+      letter-spacing:0.05em;
+    }
+  }
+
+  @media (max-width:600px){
+    .node{ width: 100%; max-width:280px;}
+    .branch-wrap .node{ width: 100%; max-width:280px;}
+    .agent-grid{ grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<h1>How AI Actually Works</h1>
+<div class="subtitle">A flow from your message to a response — and where it all fits in the wider AI landscape</div>
+
+<!-- ============ FLOW ============ -->
+<div class="section-label">Part 1 — The Flow of a Single Request</div>
+<div class="flow">
+
+  <div class="node"><div class="num">STEP 1</div><div class="title">User Input</div><div class="desc">You type a prompt or question in natural language</div></div>
+  <div class="arrow-down">↓</div>
+
+  <div class="node"><div class="num">STEP 2</div><div class="title">Tokenization</div><div class="desc">Your text is chopped into small pieces called tokens — roughly word-chunks. <em>Example: "unhelpful" → "un" + "help" + "ful"</em>. This is why AI pricing/limits are measured "per token," not per word</div></div>
+  <div class="arrow-down">↓</div>
+
+  <div class="node"><div class="num">STEP 3</div><div class="title">Embedding</div><div class="desc">Each token is turned into a list of numbers (a "vector") that captures its meaning. <em>Similar meanings → similar numbers</em>, so the model can do math on language instead of just matching exact words</div></div>
+  <div class="arrow-down">↓</div>
+
+  <div class="node"><div class="num">STEP 4</div><div class="title">Model / Neural Network</div><div class="desc">The model reads all the tokens together and figures out which words matter most to each other. <em>Example: in "the bank by the river," it links "bank" to "river," not to "money"</em>. This weighing mechanism is called attention</div></div>
+  <div class="arrow-down">↓</div>
+
+  <div class="node"><div class="num">STEP 5</div><div class="title">Context Window</div><div class="desc">Everything the model can "see" at once — your message, chat history, system instructions, any retrieved documents. <em>It has a size limit</em>, like a desk that can only hold so many papers at a time; older content gets pushed off if the chat runs long</div></div>
+  <div class="arrow-down">↓</div>
+
+  <div class="loop-note">If the task needs outside info or actions, the model can branch here:</div>
+  <div class="arrow-down">↓</div>
+
+  <div class="branch-wrap">
+    <div class="node"><div class="num">4a</div><div class="title">RAG</div><div class="desc">"Retrieval-Augmented Generation" — before answering, the model looks things up (a doc, a database, the web) instead of relying only on what it memorized during training</div></div>
+    <div class="node"><div class="num">4b</div><div class="title">Tool Use</div><div class="desc">The model calls something outside itself — runs code, checks a calendar, searches the web — like using a calculator instead of doing math in its head</div></div>
+    <div class="node"><div class="num">4c</div><div class="title">Agent Loop</div><div class="desc">The model makes a plan, takes an action, checks what happened, then decides the next step — repeating until the task is done</div></div>
+  </div>
+  <div class="arrow-down">↓</div>
+
+  <div class="node"><div class="num">STEP 6</div><div class="title">Inference</div><div class="desc">"Inference" just means the model is being <em>used</em> to produce an answer (as opposed to "training," when it was originally taught). It predicts the next token, over and over, one at a time</div></div>
+  <div class="arrow-down">↓</div>
+
+  <div class="node"><div class="num">STEP 7</div><div class="title">Decoding & Temperature</div><div class="desc">Tokens are turned back into readable text. <em>Temperature</em> is the dial controlling how safe vs. varied the word choices are — low = consistent, predictable answers (good for facts/code); high = more variety and creativity (good for brainstorming)</div></div>
+  <div class="arrow-down">↓</div>
+
+  <div class="node" style="border-color:var(--agent); background:rgba(240,168,96,0.1);"><div class="num" style="color:var(--agent);">STEP 8</div><div class="title">Response to User</div><div class="desc">Final answer, image, code, or action result is returned to you</div></div>
+
+</div>
+
+<!-- ============ HIERARCHY ============ -->
+<div class="section-label">Part 2 — Which Term is a Subset of What</div>
+
+<div class="nest">
+  <div class="nest-label">ARTIFICIAL INTELLIGENCE (AI)
+    <span class="tag">Umbrella term for any system that mimics human intelligence — includes simple rule-based programs ("if X then Y"), not just modern AI</span>
+  </div>
+
+  <div class="nest-ml">
+    <div class="nest-label">MACHINE LEARNING (ML)
+      <span class="tag">System learns patterns by seeing lots of examples, instead of a human writing rules. <em>Example: shown 10,000 spam emails, it learns what spam "looks like"</em></span>
+    </div>
+
+    <div class="nest-nlp">
+      <div class="nest-label">NLP — NATURAL LANGUAGE PROCESSING
+        <span class="tag">The branch of ML/AI focused on language specifically. Older and broader than LLMs — includes spell-check, translation, sentiment analysis, and 2000s-era chatbots that used simple rules, not neural networks. <em>Example: Google Translate, Grammarly, old-school keyword chatbots</em></span>
+      </div>
+
+    <div class="nest-dl">
+      <div class="nest-label">DEEP LEARNING
+        <span class="tag">ML using "neural networks" — many stacked layers loosely inspired by the brain. Needs lots of data & compute, but handles messy input like images and speech well</span>
+      </div>
+
+      <div class="nest-gen">
+        <div class="nest-label">GENERATIVE AI
+          <span class="tag">Instead of just labeling or predicting ("is this spam?"), it creates brand-new content — text, images, audio, code</span>
+        </div>
+
+        <div class="nest-llm">LARGE LANGUAGE MODELS (LLMs)
+          <div class="examples">The modern, deep-learning way of doing NLP — trained on huge amounts of text: Claude · GPT · Gemini · Llama</div>
+        </div>
+      </div>
+    </div>
+    </div>
+
+      <div class="vision-branch">
+        <div class="chip"><div class="t">Computer Vision</div><div class="d">Teaching a model to "see" — detect objects, faces, defects in images/video. <em>Example: Face ID, medical scan analysis</em></div></div>
+        <div class="chip"><div class="t">Diffusion Models</div><div class="d">Generate images/video by starting from random noise and refining it into a picture — Midjourney, Stable Diffusion, Sora</div></div>
+        <div class="chip"><div class="t">Multimodal Models</div><div class="d">One model that handles text + images + audio together, not just one type — Claude, GPT-4o, Gemini</div></div>
+      </div>
+  </div>
+</div>
+
+<!-- ============ AGENT ANATOMY ============ -->
+<div class="section-label">Part 3 — What Turns an LLM into an "Agent"</div>
+
+<div class="agent-wrap">
+  <div class="agent-core">AI AGENT<div class="sub">An LLM wrapped with tools, memory, and multi-step reasoning — not just one-shot chat</div></div>
+
+  <div class="agent-grid">
+    <div class="agent-card"><div class="t">🧠 LLM (the brain)</div><div class="d">Core reasoning & generation engine</div></div>
+    <div class="agent-card"><div class="t">💾 Memory</div><div class="d">Short-term (this chat) + long-term (stored facts/history)</div></div>
+    <div class="agent-card"><div class="t">🔧 Tools</div><div class="d">APIs, code execution, search, calculators</div></div>
+    <div class="agent-card"><div class="t">🗺️ Planning</div><div class="d">Breaks a goal into steps, picks the right tool</div></div>
+  </div>
+
+  <div class="cycle-note">
+    Agent "types" aren't really separate categories — they're combinations of two things: <strong>how many agents are involved</strong>, and <strong>how much a human is in the loop</strong>. RAG is not a separate agent type — it's a tool an agent uses to look things up.
+  </div>
+
+  <div class="axis-title">Agent Types — Crossed on Two Axes</div>
+  <div class="axis-grid">
+    <div class="axis-cell head"></div>
+    <div class="axis-cell head">Human checks each step (Copilot-style)</div>
+    <div class="axis-cell head">Runs many steps on its own (Autonomous)</div>
+
+    <div class="axis-cell rowhead">One agent<br>(Single-agent)</div>
+    <div class="axis-cell" data-label="One agent + human checks">
+      <div class="t">Assisted single agent</div>
+      <div class="d">One LLM suggests an edit or action; you approve before it happens</div>
+      <div class="ex">Ex: GitHub Copilot suggesting code you accept line-by-line</div>
+    </div>
+    <div class="axis-cell" data-label="One agent, autonomous">
+      <div class="t">Autonomous single agent</div>
+      <div class="d">One LLM plans and executes a multi-step task with minimal check-ins</div>
+      <div class="ex">Ex: Claude Code writing, testing, and fixing a script end-to-end</div>
+    </div>
+
+    <div class="axis-cell rowhead">Several agents<br>(Multi-agent)</div>
+    <div class="axis-cell" data-label="Multiple agents + human checks">
+      <div class="t">Assisted multi-agent</div>
+      <div class="d">Several specialized agents each do a piece, human reviews the combined output</div>
+      <div class="ex">Ex: a "drafter" agent + "editor" agent producing a report you sign off on</div>
+    </div>
+    <div class="axis-cell" data-label="Multiple agents, autonomous">
+      <div class="t">Autonomous multi-agent</div>
+      <div class="d">Several agents coordinate and hand off work to each other with little human input</div>
+      <div class="ex">Ex: a research agent finds data, a second agent analyzes it, a third writes the summary — all automatically</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

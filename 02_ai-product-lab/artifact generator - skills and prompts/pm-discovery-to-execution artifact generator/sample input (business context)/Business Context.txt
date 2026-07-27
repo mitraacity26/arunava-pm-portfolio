@@ -1,0 +1,5 @@
+Optum (UHG's largest business unit) routes most patient/provider questions — including simple, repetitive ones about benefits, coverage, claims, billing — to live agents. This causes long wait times and costs ~$57M/year in operational spend, plus poor UX.
+Proposed: Companion, an AI chatbot as first point of contact — instant answers, self-service for routine tasks, in-app routing for complex queries. Differentiators: healthcare-specific intelligence, HIPAA-compliant personalization via member data, deep UHG systems integration (claims/benefits/provider directory), warm transfer with context passed to agents (lowers AHT), continuous learning.
+Users: UHG consumers (patients, providers); internally, support teams receiving escalations.
+Scope/target: MVP live in SoCal by Feb 2025.
+Success metrics: 50% of interactions resolved without escalation, higher CSAT, savings of $5M (post-MVP) scaling to $30M/year by 2026.

@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CJA Setup Flow — Boston Scientific / Dr. Patel</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root{
+    --bg: #0e1420;
+    --bg-panel: #141c2c;
+    --bg-card: #182338;
+    --line: #253046;
+    --line-soft: #1c2740;
+    --teal: #5eead4;
+    --teal-dim: #2d5f57;
+    --amber: #f5b25c;
+    --amber-dim: #6b4d24;
+    --ink: #e8edf6;
+    --ink-dim: #8b97ae;
+    --ink-faint: #566178;
+    --off: #2a3550;
+    --red-locked: #4a3040;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;}
+  body{
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(94,234,212,0.06) 1px, transparent 0);
+    background-size: 28px 28px;
+  }
+
+  .wrap{max-width:1180px;margin:0 auto;padding:40px 24px 100px;}
+
+  header{margin-bottom:36px;}
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;letter-spacing:0.14em;text-transform:uppercase;
+    color:var(--teal);margin-bottom:10px;display:flex;align-items:center;gap:8px;
+  }
+  .eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--teal);box-shadow:0 0 8px var(--teal);}
+  h1{
+    font-family:'Fraunces',serif;font-weight:600;font-size:clamp(28px,4vw,42px);
+    margin:0 0 8px;line-height:1.08;letter-spacing:-0.01em;
+  }
+  h1 em{font-style:italic;color:var(--teal);}
+  .sub{color:var(--ink-dim);font-size:15px;max-width:640px;line-height:1.55;}
+
+  /* ---- Identity thread strip ---- */
+  .thread-strip{
+    display:flex;align-items:center;gap:0;margin:28px 0 40px;
+    background:var(--bg-panel);border:1px solid var(--line);border-radius:10px;
+    padding:18px 20px;overflow-x:auto;
+  }
+  .thread-label{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-faint);
+    white-space:nowrap;margin-right:16px;padding-right:16px;border-right:1px solid var(--line);
+  }
+  .thread-label b{color:var(--amber);display:block;font-size:13px;margin-top:2px;}
+  .node-row{display:flex;align-items:center;flex:1;min-width:0;}
+  .node{
+    display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0;position:relative;
+  }
+  .node .dot{
+    width:14px;height:14px;border-radius:50%;background:var(--bg-card);
+    border:2px solid var(--ink-faint);transition:all .4s ease;position:relative;z-index:2;
+  }
+  .node.active .dot{background:var(--teal);border-color:var(--teal);box-shadow:0 0 12px rgba(94,234,212,0.6);}
+  .node.done .dot{background:var(--amber);border-color:var(--amber);}
+  .node span.nlabel{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;}
+  .node.active span.nlabel, .node.done span.nlabel{color:var(--ink);}
+  .connector{flex:1;height:2px;background:var(--line);position:relative;margin:0 2px;min-width:20px;top:-10px;}
+  .connector .fill{position:absolute;inset:0;background:var(--amber);width:0%;transition:width .5s ease;}
+
+  /* ---- Step navigator ---- */
+  .stepnav{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap;}
+  .stepnav button{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;
+    background:var(--bg-panel);border:1px solid var(--line);color:var(--ink-dim);
+    padding:8px 14px;border-radius:100px;cursor:pointer;transition:all .2s;
+  }
+  .stepnav button:hover{border-color:var(--teal-dim);color:var(--ink);}
+  .stepnav button.current{background:var(--teal);color:#08161a;border-color:var(--teal);font-weight:600;}
+  .stepnav button.completed{color:var(--amber);border-color:var(--amber-dim);}
+
+  /* ---- Main stage ---- */
+  .stage{
+    background:var(--bg-panel);border:1px solid var(--line);border-radius:14px;
+    padding:32px;min-height:420px;position:relative;
+  }
+  .stage-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:22px;gap:20px;}
+  .stage-num{
+    font-family:'IBM Plex Mono',monospace;color:var(--amber);font-size:12px;letter-spacing:.1em;
+  }
+  .stage-title{font-family:'Fraunces',serif;font-size:26px;font-weight:600;margin:4px 0 8px;}
+  .stage-desc{color:var(--ink-dim);font-size:14.5px;line-height:1.6;max-width:600px;}
+  .badge-simple{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;background:rgba(94,234,212,0.08);
+    border:1px solid var(--teal-dim);color:var(--teal);padding:5px 10px;border-radius:6px;
+    white-space:nowrap;flex-shrink:0;
+  }
+
+  /* interactive zone per step */
+  .interactive{margin-top:24px;display:grid;gap:14px;}
+
+  /* Step 1: sources */
+  .source-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;}
+  .source-card{
+    background:var(--bg-card);border:1px solid var(--line);border-radius:10px;padding:16px;
+    cursor:pointer;transition:all .2s;position:relative;
+  }
+  .source-card:hover{border-color:var(--teal-dim);transform:translateY(-2px);}
+  .source-card.connected{border-color:var(--teal);background:rgba(94,234,212,0.05);}
+  .source-card .sname{font-weight:600;font-size:14.5px;margin-bottom:4px;}
+  .source-card .stype{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-faint);}
+  .source-card .stat{
+    position:absolute;top:14px;right:14px;font-family:'IBM Plex Mono',monospace;
+    font-size:10px;padding:3px 8px;border-radius:100px;background:var(--off);color:var(--ink-faint);
+  }
+  .source-card.connected .stat{background:var(--teal-dim);color:var(--teal);}
+
+  /* Step 2: schema builder */
+  .schema-zone{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media(max-width:720px){.schema-zone{grid-template-columns:1fr;}}
+  .field-pool, .schema-drop{
+    background:var(--bg-card);border:1px solid var(--line);border-radius:10px;padding:16px;min-height:200px;
+  }
+  .zone-title{font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-faint);margin-bottom:12px;}
+  .field-chip{
+    font-family:'IBM Plex Mono',monospace;font-size:12.5px;background:var(--bg-panel);
+    border:1px solid var(--line);border-radius:6px;padding:8px 12px;margin-bottom:8px;
+    cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:all .15s;
+  }
+  .field-chip:hover{border-color:var(--teal-dim);}
+  .field-chip.placed{opacity:0.35;cursor:default;}
+  .field-chip .ftag{font-size:9px;padding:2px 6px;border-radius:4px;text-transform:uppercase;letter-spacing:.05em;}
+  .ftag.event{background:rgba(94,234,212,0.12);color:var(--teal);}
+  .ftag.profile{background:rgba(245,178,92,0.12);color:var(--amber);}
+  .ftag.identity{background:rgba(245,178,92,0.25);color:var(--amber);font-weight:700;}
+  .placed-field{
+    font-family:'IBM Plex Mono',monospace;font-size:12.5px;background:var(--bg-panel);
+    border:1px solid var(--teal-dim);border-radius:6px;padding:8px 12px;margin-bottom:8px;
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .placed-field.identity-set{border-color:var(--amber);box-shadow:0 0 0 1px var(--amber) inset;}
+
+  /* Step 3: mapping */
+  .map-row{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-bottom:10px;}
+  .map-side{
+    font-family:'IBM Plex Mono',monospace;font-size:12.5px;padding:9px 12px;border-radius:6px;
+    border:1px solid var(--line);background:var(--bg-card);
+  }
+  .map-side.raw{color:var(--ink-dim);}
+  .map-side.mapped{color:var(--teal);}
+  .map-arrow{color:var(--ink-faint);font-size:14px;}
+  .map-row.correct .map-side.mapped{border-color:var(--teal);}
+
+  select.mapsel{
+    width:100%;background:var(--bg-card);color:var(--teal);border:1px solid var(--line);
+    font-family:'IBM Plex Mono',monospace;font-size:12.5px;padding:9px 12px;border-radius:6px;
+  }
+
+  /* Step 4/5/6 - generic panel */
+  .panel-visual{
+    background:var(--bg-card);border:1px solid var(--line);border-radius:10px;padding:20px;
+  }
+  .connection-datasets{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0;}
+  .ds-chip{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;padding:8px 14px;border-radius:100px;
+    border:1px solid var(--teal-dim);background:rgba(94,234,212,0.06);color:var(--teal);cursor:pointer;
+  }
+  .ds-chip.off{opacity:.3;border-color:var(--line);color:var(--ink-faint);}
+
+  .toggle-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line-soft);}
+  .toggle-row:last-child{border-bottom:none;}
+  .toggle-row .tname{font-family:'IBM Plex Mono',monospace;font-size:13px;}
+  .toggle-row .thint{font-size:11px;color:var(--ink-faint);margin-top:2px;}
+  .switch{width:38px;height:20px;border-radius:100px;background:var(--off);position:relative;cursor:pointer;flex-shrink:0;transition:background .2s;}
+  .switch.on{background:var(--teal-dim);}
+  .switch .knob{width:16px;height:16px;border-radius:50%;background:var(--ink-faint);position:absolute;top:2px;left:2px;transition:all .2s;}
+  .switch.on .knob{left:20px;background:var(--teal);}
+  .switch.locked{cursor:not-allowed;opacity:.5;}
+
+  table.wtable{width:100%;border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:12.5px;margin-top:10px;}
+  table.wtable th{text-align:left;color:var(--ink-faint);font-weight:500;padding:8px;border-bottom:1px solid var(--line);font-size:11px;text-transform:uppercase;letter-spacing:.05em;}
+  table.wtable td{padding:8px;border-bottom:1px solid var(--line-soft);color:var(--ink);}
+  table.wtable tr:hover td{background:rgba(94,234,212,0.03);}
+
+  /* footer nav + feedback */
+  .stage-footer{display:flex;justify-content:space-between;align-items:center;margin-top:28px;padding-top:20px;border-top:1px solid var(--line);}
+  .feedback{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--teal);min-height:18px;}
+  .feedback.error{color:#f28b82;}
+  .navbtn{
+    font-family:'Inter',sans-serif;font-weight:600;font-size:13.5px;
+    background:var(--teal);color:#08161a;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;
+  }
+  .navbtn:disabled{background:var(--off);color:var(--ink-faint);cursor:not-allowed;}
+  .navbtn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink-dim);}
+
+  .example-callout{
+    margin-top:20px;background:linear-gradient(135deg, rgba(245,178,92,0.06), transparent);
+    border-left:3px solid var(--amber);border-radius:0 8px 8px 0;padding:14px 18px;
+    font-size:13.5px;line-height:1.55;color:var(--ink-dim);
+  }
+  .example-callout b{color:var(--amber);}
+
+  .completion-banner{
+    text-align:center;padding:60px 20px;
+  }
+  .completion-banner h2{font-family:'Fraunces',serif;font-size:32px;margin-bottom:12px;}
+  .completion-banner p{color:var(--ink-dim);max-width:480px;margin:0 auto 24px;line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">CJA Interactive Practice</div>
+    <h1>Stitch Dr. Patel's <em>journey</em> together.</h1>
+    <p class="sub">Walk through the six-step Customer Journey Analytics setup using the Boston Scientific / WATCHMAN example. Every choice below either advances the identity thread or breaks it — watch the strip up top.</p>
+  </header>
+
+  <div class="thread-strip">
+    <div class="thread-label">IDENTITY THREAD<b id="threadStatus">Not yet stitched</b></div>
+    <div class="node-row" id="nodeRow"></div>
+  </div>
+
+  <div class="stepnav" id="stepNav"></div>
+
+  <div class="stage" id="stage"></div>
+</div>
+
+<script>
+const steps = [
+  {
+    key:'sources', num:'STEP 01', title:'Connect Data Sources',
+    desc:"Tell Adobe Experience Platform where the data actually lives. Connect all three of Boston Scientific's sources before moving on — CJA can't stitch a channel it was never told about.",
+    simple:'A Source Connection is a pipe.',
+    render: renderSources, validate: () => state.sources.every(s=>s.connected),
+    hint: () => {
+      const missing = state.sources.filter(s=>!s.connected).map(s=>s.name);
+      return missing.length ? `Click to connect: ${missing.join(', ')}` : '';
+    },
+    example:"Dr. Patel's site visit (Web), her HCP Portal login (Mobile SDK), and the field rep's Salesforce note all need their own pipe before anything downstream can see them."
+  },
+  {
+    key:'schema', num:'STEP 02', title:'Build the XDM Schema',
+    desc:"Drag each field into the schema, then mark exactly one field as Identity — that's the field CJA will stitch every touchpoint on. Get the scope right: event-level ≈ old prop, profile-level ≈ old eVar.",
+    simple:'Identity = the thread that ties one person\'s touchpoints together.',
+    render: renderSchema, validate: () => state.schema.placed.length===4 && state.schema.identityField==='hcpNPINumber',
+    hint: () => {
+      if(state.schema.placed.length<4) return `Add all 4 fields to the schema first (${state.schema.placed.length}/4 placed).`;
+      if(state.schema.identityField!=='hcpNPINumber') return `Set hcpNPINumber as the Identity field — click "set as identity" next to it.`;
+      return '';
+    },
+    example:'deviceInterest is event-scoped (fires per pageview). hcpSpecialty is profile-scoped (persists). hcpNPINumber is the Identity — without it, Dr. Patel\'s web visit and CRM note stay strangers.'
+  },
+  {
+    key:'dataset', num:'STEP 03', title:'Create Dataset & Map Fields',
+    desc:'Translate each raw source field into the schema\'s language. Pick the correct XDM target for every raw field below.',
+    simple:'Mapping = translating GA/CRM field names into Adobe\'s schema language.',
+    render: renderMapping, validate: () => state.mapping.every((m,i)=>m.selected===m.correct),
+    hint: () => {
+      const wrong = state.mapping.filter(m=>m.selected!==m.correct).map(m=>m.raw);
+      return wrong.length ? `These still need the right XDM target: ${wrong.join(', ')}` : '';
+    },
+    example:"sfdc_visit_type → commerce.visitDetails.type, web_content_download → _bsc.deviceInterest. The result is one clean dataset: bsc_hcp_unified_data."
+  },
+  {
+    key:'connection', num:'STEP 04', title:'Create a CJA Connection',
+    desc:'This is the CJA-specific glue step. Select every dataset that should merge into one unified view, and confirm the Person ID field CJA stitches on.',
+    simple:'The Connection is what makes CJA different from plain Adobe Analytics.',
+    render: renderConnection, validate: () => state.connection.datasets.every(d=>d.on) && state.connection.personId,
+    hint: () => {
+      const missing = state.connection.datasets.filter(d=>!d.on).map(d=>d.name);
+      if(missing.length) return `Select these datasets: ${missing.join(', ')}`;
+      if(!state.connection.personId) return `Confirm the Person ID field by toggling the switch on.`;
+      return '';
+    },
+    example:'"BSC HCP Omnichannel Connection" merges bsc_hcp_web, bsc_hcp_app, and bsc_crm_visits — all stitched on hcpNPINumber.'
+  },
+  {
+    key:'dataview', num:'STEP 05', title:'Build a Data View',
+    desc:"Curate exactly which fields analysts can see. Toggle ON what marketing needs — but leave sensitive fields OFF. This is where governance happens.",
+    simple:'Not every field needs to be report-ready.',
+    render: renderDataView, validate: () => state.dataview.fields.filter(f=>f.shouldBeOn).every(f=>f.on) && !state.dataview.fields.find(f=>!f.shouldBeOn).on,
+    hint: () => {
+      const missingOn = state.dataview.fields.filter(f=>f.shouldBeOn && !f.on).map(f=>f.name);
+      const wronglyOn = state.dataview.fields.filter(f=>!f.shouldBeOn && f.on).map(f=>f.name);
+      const parts = [];
+      if(missingOn.length) parts.push(`turn ON: ${missingOn.join(', ')}`);
+      if(wronglyOn.length) parts.push(`turn OFF (sensitive): ${wronglyOn.join(', ')}`);
+      return parts.join(' — ');
+    },
+    example:'Marketing analysts get Device Interest, HCP Specialty, Touchpoint Channel — but "Internal Rep Notes" stays toggled OFF to protect sensitive Salesforce free-text.'
+  },
+  {
+    key:'workspace', num:'STEP 06', title:'Report in Analysis Workspace',
+    desc:'The payoff. This freeform table is now live — built from every channel you connected, not just web.',
+    simple:'This is the "GA reporting screen" equivalent, but omnichannel.',
+    render: renderWorkspace, validate: () => true,
+    example:'Does digital HCP engagement actually drive faster field-rep action? Conference QR scans convert to a rep follow-up 71% of the time — nearly double the web rate.'
+  }
+];
+
+let current = 0;
+let state = {
+  sources: [
+    {name:'bostonscientific.com', type:'Web SDK source', connected:false},
+    {name:'HCP Portal App', type:'Mobile SDK source', connected:false},
+    {name:'Salesforce CRM', type:'Rep visit logs', connected:false},
+  ],
+  schema: {
+    pool: [
+      {id:'deviceInterest', scope:'event', label:'deviceInterest'},
+      {id:'hcpSpecialty', scope:'profile', label:'hcpSpecialty'},
+      {id:'contentDownload', scope:'event', label:'contentDownload'},
+      {id:'hcpNPINumber', scope:'profile', label:'hcpNPINumber'},
+    ],
+    placed: [],
+    identityField: null
+  },
+  mapping: [
+    {raw:'sfdc_visit_type', correct:'commerce.visitDetails.type', selected:null,
+      options:['commerce.visitDetails.type','web.webPageDetails.name','_bsc.deviceInterest']},
+    {raw:'web_content_download', correct:'_bsc.deviceInterest', selected:null,
+      options:['_bsc.deviceInterest','identityMap.hcpNPINumber','commerce.visitDetails.type']},
+    {raw:'hcp_npi_raw', correct:'identityMap.hcpNPINumber', selected:null,
+      options:['web.webPageDetails.URL','identityMap.hcpNPINumber','_bsc.deviceInterest']},
+  ],
+  connection: {
+    datasets: [
+      {name:'bsc_hcp_web', on:false},
+      {name:'bsc_hcp_app', on:false},
+      {name:'bsc_crm_visits', on:false},
+    ],
+    personId: false
+  },
+  dataview: {
+    fields: [
+      {name:'Device Interest', shouldBeOn:true, on:false},
+      {name:'HCP Specialty', shouldBeOn:true, on:false},
+      {name:'Touchpoint Channel', shouldBeOn:true, on:false},
+      {name:'Internal Rep Notes (sensitive)', shouldBeOn:false, on:false},
+    ]
+  }
+};
+
+function el(html){ const d=document.createElement('div'); d.innerHTML=html.trim(); return d.firstChild; }
+
+function renderNodeStrip(){
+  const row = document.getElementById('nodeRow');
+  row.innerHTML='';
+  steps.forEach((s,i)=>{
+    const node = el(`<div class="node ${i<current?'done':i===current?'active':''}"><div class="dot"></div><span class="nlabel">${s.title.split(' ').slice(0,2).join(' ')}</span></div>`);
+    row.appendChild(node);
+    if(i < steps.length-1){
+      const conn = el(`<div class="connector"><div class="fill"></div></div>`);
+      const fillPct = i < current ? 100 : 0;
+      conn.querySelector('.fill').style.width = fillPct+'%';
+      row.appendChild(conn);
+    }
+  });
+  const statusEl = document.getElementById('threadStatus');
+  if(current===0) statusEl.textContent='Not yet stitched';
+  else if(state.schema.identityField==='hcpNPINumber' && current>=1) statusEl.textContent='hcpNPINumber → linking web + app + CRM';
+  else statusEl.textContent='Awaiting Identity field (Step 2)';
+}
+
+function renderStepNav(){
+  const nav = document.getElementById('stepNav');
+  nav.innerHTML='';
+  steps.forEach((s,i)=>{
+    const btn = el(`<button class="${i===current?'current':i<current?'completed':''}">${i+1}. ${s.title}</button>`);
+    btn.onclick=()=>{ if(i<=current || steps.slice(0,i).every((_,j)=>steps[j].validate())){ current=i; renderAll(); } };
+    nav.appendChild(btn);
+  });
+}
+
+function renderStage(){
+  const stage = document.getElementById('stage');
+  const s = steps[current];
+  stage.innerHTML = `
+    <div class="stage-head">
+      <div>
+        <div class="stage-num">${s.num}</div>
+        <div class="stage-title">${s.title}</div>
+        <div class="stage-desc">${s.desc}</div>
+      </div>
+      <div class="badge-simple">${s.simple}</div>
+    </div>
+    <div class="interactive" id="interactiveZone"></div>
+    <div class="example-callout"><b>Boston Scientific:</b> ${s.example}</div>
+    <div class="stage-footer">
+      <div class="feedback" id="feedback"></div>
+      <div style="display:flex; gap:10px;">
+        ${current>0 ? '<button class="navbtn ghost" id="backBtn">Back</button>' : ''}
+        <button class="navbtn" id="nextBtn">${current===steps.length-1 ? 'Finish' : 'Continue'}</button>
+      </div>
+    </div>
+  `;
+  s.render();
+  document.getElementById('nextBtn').onclick = ()=>{
+    if(s.validate()){
+      if(current===steps.length-1){ showCompletion(); }
+      else{ current++; renderAll(); }
+    } else {
+      const fb = document.getElementById('feedback');
+      fb.textContent = s.hint ? s.hint() : 'Not quite — try again.';
+      fb.className='feedback error';
+    }
+  };
+  if(document.getElementById('backBtn')) document.getElementById('backBtn').onclick=()=>{ current--; renderAll(); };
+}
+
+function renderSources(){
+  const zone = document.getElementById('interactiveZone');
+  const grid = el(`<div class="source-grid"></div>`);
+  state.sources.forEach((src,i)=>{
+    const card = el(`
+      <div class="source-card ${src.connected?'connected':''}">
+        <div class="stat">${src.connected?'Connected':'Connect'}</div>
+        <div class="sname">${src.name}</div>
+        <div class="stype">${src.type}</div>
+      </div>`);
+    card.onclick=()=>{ src.connected=!src.connected; renderStage(); };
+    grid.appendChild(card);
+  });
+  zone.appendChild(grid);
+}
+
+function renderSchema(){
+  const zone = document.getElementById('interactiveZone');
+  const wrap = el(`
+    <div class="schema-zone">
+      <div class="field-pool">
+        <div class="zone-title">Available Fields</div>
+        <div id="poolList"></div>
+      </div>
+      <div class="schema-drop">
+        <div class="zone-title">BSC HCP Engagement Schema</div>
+        <div id="placedList"></div>
+      </div>
+    </div>`);
+  zone.appendChild(wrap);
+  const poolList = wrap.querySelector('#poolList');
+  const placedList = wrap.querySelector('#placedList');
+
+  state.schema.pool.forEach(f=>{
+    const isPlaced = state.schema.placed.includes(f.id);
+    const chip = el(`
+      <div class="field-chip ${isPlaced?'placed':''}">
+        <span>${f.label}</span>
+        <span class="ftag ${f.scope}">${f.scope}</span>
+      </div>`);
+    if(!isPlaced) chip.onclick=()=>{ state.schema.placed.push(f.id); renderStage(); };
+    poolList.appendChild(chip);
+  });
+
+  if(state.schema.placed.length===0){
+    placedList.appendChild(el(`<div style="color:var(--ink-faint); font-family:'IBM Plex Mono',monospace; font-size:12px;">Click fields on the left to add them to the schema →</div>`));
+  }
+  state.schema.placed.forEach(id=>{
+    const f = state.schema.pool.find(x=>x.id===id);
+    const isIdentity = state.schema.identityField===id;
+    const row = el(`
+      <div class="placed-field ${isIdentity?'identity-set':''}">
+        <span>${f.label} <span style="color:var(--ink-faint)">(${f.scope}-scoped)</span></span>
+        <span class="identity-toggle" style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; cursor:pointer; color:${isIdentity?'var(--amber)':'var(--ink-faint)'};">${isIdentity?'★ IDENTITY':'set as identity'}</span>
+      </div>`);
+    row.querySelector('.identity-toggle').onclick=(e)=>{
+      e.stopPropagation();
+      state.schema.identityField = id;
+      renderStage();
+    };
+    placedList.appendChild(row);
+  });
+}
+
+function renderMapping(){
+  const zone = document.getElementById('interactiveZone');
+  state.mapping.forEach((m,i)=>{
+    const isCorrect = m.selected===m.correct;
+    const isWrong = m.selected && !isCorrect;
+    const row = el(`
+      <div class="map-row ${isCorrect?'correct':''}">
+        <div class="map-side raw">${m.raw}</div>
+        <div class="map-arrow">${isCorrect?'✓':'→'}</div>
+        <select class="mapsel" data-i="${i}" style="${isWrong?'border-color:#f28b82;color:#f28b82;':''}">
+          <option value="">— choose XDM field —</option>
+          ${m.options.map(o=>`<option value="${o}" ${m.selected===o?'selected':''}>${o}</option>`).join('')}
+        </select>
+      </div>`);
+    row.querySelector('select').onchange=(e)=>{ state.mapping[i].selected=e.target.value; renderStage(); };
+    zone.appendChild(row);
+  });
+}
+
+function renderConnection(){
+  const zone = document.getElementById('interactiveZone');
+  const panel = el(`
+    <div class="panel-visual">
+      <div class="zone-title">Select datasets to merge</div>
+      <div class="connection-datasets" id="dsChips"></div>
+      <div class="zone-title" style="margin-top:18px;">Person ID / Identity field</div>
+      <div class="toggle-row">
+        <div><div class="tname">identityMap.hcpNPINumber</div><div class="thint">Carried over from Step 2 — this is what CJA stitches on</div></div>
+        <div class="switch ${state.connection.personId?'on':''}" id="personSwitch"><div class="knob"></div></div>
+      </div>
+    </div>`);
+  zone.appendChild(panel);
+  const chipRow = panel.querySelector('#dsChips');
+  state.connection.datasets.forEach((d,i)=>{
+    const chip = el(`<div class="ds-chip ${d.on?'':'off'}">${d.name}</div>`);
+    chip.onclick=()=>{ d.on=!d.on; renderStage(); };
+    chipRow.appendChild(chip);
+  });
+  panel.querySelector('#personSwitch').onclick=()=>{ state.connection.personId=!state.connection.personId; renderStage(); };
+}
+
+function renderDataView(){
+  const zone = document.getElementById('interactiveZone');
+  const panel = el(`<div class="panel-visual" id="dvPanel"></div>`);
+  zone.appendChild(panel);
+  state.dataview.fields.forEach((f,i)=>{
+    const row = el(`
+      <div class="toggle-row">
+        <div>
+          <div class="tname">${f.name}</div>
+          <div class="thint">${f.shouldBeOn ? 'Needed for marketing reporting' : 'Governance: should stay hidden from marketing'}</div>
+        </div>
+        <div class="switch ${f.on?'on':''}"><div class="knob"></div></div>
+      </div>`);
+    row.querySelector('.switch').onclick=()=>{ f.on=!f.on; renderStage(); };
+    panel.appendChild(row);
+  });
+}
+
+function renderWorkspace(){
+  const zone = document.getElementById('interactiveZone');
+  const panel = el(`
+    <div class="panel-visual">
+      <div class="zone-title">Freeform Table — WATCHMAN Interest by Channel</div>
+      <table class="wtable">
+        <thead><tr><th>Channel</th><th>HCPs</th><th>Rep Follow-up %</th></tr></thead>
+        <tbody>
+          <tr><td>Web (clinical page)</td><td>1,240</td><td>38%</td></tr>
+          <tr><td>HCP App</td><td>610</td><td>52%</td></tr>
+          <tr><td>Conference QR scan</td><td>340</td><td style="color:var(--teal); font-weight:600;">71%</td></tr>
+        </tbody>
+      </table>
+    </div>`);
+  zone.appendChild(panel);
+}
+
+function showCompletion(){
+  const stage = document.getElementById('stage');
+  stage.innerHTML = `
+    <div class="completion-banner">
+      <div class="stage-num" style="margin-bottom:14px;">FLOW COMPLETE</div>
+      <h2>The thread holds.</h2>
+      <p>You connected Web + App + CRM, stitched everything on <b style="color:var(--amber); font-family:'IBM Plex Mono',monospace;">hcpNPINumber</b>, and turned three disconnected records into one HCP journey — same as CJA does for real.</p>
+      <button class="navbtn" id="restartBtn">Run it again</button>
+    </div>`;
+  document.getElementById('restartBtn').onclick=()=>{ location.reload(); };
+  const row = document.getElementById('nodeRow');
+  row.querySelectorAll('.node').forEach(n=>n.classList.add('done'));
+  row.querySelectorAll('.connector .fill').forEach(f=>f.style.width='100%');
+  document.getElementById('threadStatus').textContent='hcpNPINumber → web + app + CRM stitched';
+}
+
+function renderAll(){
+  renderNodeStrip();
+  renderStepNav();
+  renderStage();
+}
+renderAll();
+</script>
+</body>
+</html>

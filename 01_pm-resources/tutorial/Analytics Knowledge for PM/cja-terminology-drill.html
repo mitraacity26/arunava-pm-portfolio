@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CJA Terminology & Interview Drill</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap');
+  :root{
+    --bg:#0e1420; --bg-panel:#141c2c; --bg-card:#182338;
+    --line:#253046; --line-soft:#1c2740;
+    --teal:#5eead4; --teal-dim:#2d5f57;
+    --amber:#f5b25c; --amber-dim:#6b4d24;
+    --ink:#e8edf6; --ink-dim:#8b97ae; --ink-faint:#566178;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;}
+  body{background-image:radial-gradient(circle at 1px 1px, rgba(94,234,212,0.06) 1px, transparent 0); background-size:28px 28px;}
+  .wrap{max-width:900px;margin:0 auto;padding:40px 24px 100px;}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+  .eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--teal);box-shadow:0 0 8px var(--teal);}
+  h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(26px,4vw,38px);margin:0 0 8px;letter-spacing:-0.01em;}
+  h1 em{font-style:italic;color:var(--teal);}
+  .sub{color:var(--ink-dim);font-size:15px;max-width:600px;line-height:1.55;margin-bottom:32px;}
+
+  .modeswitch{display:flex;gap:8px;margin-bottom:28px;}
+  .modeswitch button{
+    font-family:'IBM Plex Mono',monospace;font-size:12.5px;background:var(--bg-panel);
+    border:1px solid var(--line);color:var(--ink-dim);padding:10px 18px;border-radius:8px;cursor:pointer;
+  }
+  .modeswitch button.active{background:var(--teal);color:#08161a;border-color:var(--teal);font-weight:600;}
+
+  /* ---- Flashcard mode ---- */
+  .card-scene{display:flex;flex-direction:column;align-items:center;gap:20px;}
+  .progress{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-faint);}
+  .flashcard{
+    width:100%; max-width:560px; min-height:260px; perspective:1400px; cursor:pointer;
+  }
+  .flashcard-inner{
+    position:relative; width:100%; height:100%; min-height:260px; text-align:center;
+    transition:transform .5s cubic-bezier(.4,.2,.2,1); transform-style:preserve-3d;
+  }
+  .flashcard.flipped .flashcard-inner{transform:rotateY(180deg);}
+  .face{
+    position:absolute; inset:0; backface-visibility:hidden; border-radius:14px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; padding:32px;
+    border:1px solid var(--line);
+  }
+  .face.front{background:var(--bg-panel);}
+  .face.back{background:var(--bg-card); transform:rotateY(180deg); border-color:var(--teal-dim);}
+  .face-tag{font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:16px;}
+  .face-term{font-family:'Fraunces',serif; font-size:26px; font-weight:600; margin-bottom:6px;}
+  .face-hint{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-faint); margin-top:18px;}
+  .face-answer{font-family:'Fraunces',serif; font-size:22px; font-weight:600; color:var(--teal); margin-bottom:10px;}
+  .face-example{font-size:13.5px; color:var(--ink-dim); line-height:1.55; max-width:440px;}
+  .face-example b{color:var(--amber);}
+
+  .card-nav{display:flex; gap:12px; align-items:center;}
+  .card-nav button{
+    font-family:'IBM Plex Mono',monospace; font-size:12.5px; background:var(--bg-panel);
+    border:1px solid var(--line); color:var(--ink-dim); padding:9px 16px; border-radius:8px; cursor:pointer;
+  }
+  .card-nav button:hover{border-color:var(--teal-dim); color:var(--ink);}
+  .card-nav button.primary{background:var(--teal); color:#08161a; border-color:var(--teal); font-weight:600;}
+  .dots{display:flex; gap:6px;}
+  .dots span{width:6px; height:6px; border-radius:50%; background:var(--line);}
+  .dots span.seen{background:var(--teal-dim);}
+  .dots span.current{background:var(--teal);}
+
+  /* ---- Interview Q&A mode ---- */
+  .qa-list{display:flex; flex-direction:column; gap:12px;}
+  .qa-item{background:var(--bg-panel); border:1px solid var(--line); border-radius:12px; overflow:hidden;}
+  .qa-q{
+    padding:18px 22px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; gap:16px;
+  }
+  .qa-q:hover{background:rgba(94,234,212,0.03);}
+  .qa-qtext{font-family:'Fraunces',serif; font-size:17px; font-weight:600; line-height:1.4;}
+  .qa-chevron{font-family:'IBM Plex Mono',monospace; color:var(--teal); font-size:14px; transition:transform .25s; flex-shrink:0;}
+  .qa-item.open .qa-chevron{transform:rotate(90deg);}
+  .qa-a{max-height:0; overflow:hidden; transition:max-height .3s ease;}
+  .qa-item.open .qa-a{max-height:400px;}
+  .qa-a-inner{padding:0 22px 20px; color:var(--ink-dim); font-size:14.5px; line-height:1.65; border-top:1px solid var(--line-soft); margin-top:0; padding-top:16px;}
+  .qa-a-inner b{color:var(--teal);}
+
+  .self-test{
+    margin-top:8px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-faint);
+    padding:8px 22px 18px;
+  }
+
+  .reset-row{text-align:center; margin-top:32px;}
+  .reset-row button{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; background:transparent; border:1px solid var(--line);
+    color:var(--ink-faint); padding:8px 16px; border-radius:100px; cursor:pointer;
+  }
+  .hidden{display:none;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">CJA Interactive Practice</div>
+  <h1>Terminology & <em>interview</em> drill.</h1>
+  <p class="sub">Two modes: flip through GA/Adobe Analytics → CJA term translations, or self-test on the functional interview questions from the guide. Everything's still anchored to Dr. Patel and the WATCHMAN journey.</p>
+
+  <div class="modeswitch">
+    <button class="active" id="btnFlash">Flashcards</button>
+    <button id="btnQA">Interview Q&A</button>
+  </div>
+
+  <div id="flashMode" class="card-scene">
+    <div class="progress" id="progress">1 / 6</div>
+    <div class="flashcard" id="flashcard">
+      <div class="flashcard-inner">
+        <div class="face front">
+          <div class="face-tag" id="frontTag">GA / Adobe Analytics term</div>
+          <div class="face-term" id="frontTerm">Prop (Traffic Variable)</div>
+          <div class="face-hint">Tap to reveal the CJA equivalent</div>
+        </div>
+        <div class="face back">
+          <div class="face-tag">CJA Equivalent</div>
+          <div class="face-answer" id="backTerm">Event-scoped XDM field</div>
+          <div class="face-example" id="backExample"></div>
+        </div>
+      </div>
+    </div>
+    <div class="dots" id="dots"></div>
+    <div class="card-nav">
+      <button id="prevBtn">← Prev</button>
+      <button id="flipBtn" class="primary">Flip card</button>
+      <button id="nextBtn">Next →</button>
+    </div>
+  </div>
+
+  <div id="qaMode" class="qa-list hidden"></div>
+
+  <div class="reset-row hidden" id="resetRow"><button id="resetBtn">Shuffle & restart</button></div>
+</div>
+
+<script>
+const terms = [
+  {front:'Prop (Traffic Variable)', back:'Event-scoped XDM field', example:'<b>deviceInterest</b> = "WATCHMAN" captured on a single page view.'},
+  {front:'eVar (Conversion Variable)', back:'Profile-scoped field / Identity stitching', example:'<b>hcpSpecialty</b> = "Electrophysiology" persists on Dr. Patel\'s profile.'},
+  {front:'Event / Metric', back:'Metric field in schema', example:'"Clinical Content Downloads" count.'},
+  {front:'Report Suite', back:'Data View + Connection', example:'"BSC HCP Omnichannel" Connection + Data View.'},
+  {front:'GA4 Custom Dimension', back:'XDM Field (event or profile scoped)', example:'"Touchpoint Channel" (Web / App / Conference).'},
+  {front:'N/A — new in CJA', back:'Identity Stitching', example:'<b>hcpNPINumber</b> links Dr. Patel\'s web + app + CRM activity into one journey.'},
+];
+
+let idx = 0;
+let flipped = false;
+
+function renderCard(){
+  document.getElementById('progress').textContent = `${idx+1} / ${terms.length}`;
+  document.getElementById('frontTerm').textContent = terms[idx].front;
+  document.getElementById('backTerm').textContent = terms[idx].back;
+  document.getElementById('backExample').innerHTML = terms[idx].example;
+  document.getElementById('flashcard').classList.remove('flipped');
+  flipped = false;
+  const dots = document.getElementById('dots');
+  dots.innerHTML = terms.map((_,i)=>`<span class="${i===idx?'current':i<idx?'seen':''}"></span>`).join('');
+}
+document.getElementById('flashcard').onclick = ()=>{
+  flipped = !flipped;
+  document.getElementById('flashcard').classList.toggle('flipped', flipped);
+};
+document.getElementById('flipBtn').onclick = ()=>{ document.getElementById('flashcard').click(); };
+document.getElementById('nextBtn').onclick = ()=>{ idx=(idx+1)%terms.length; renderCard(); };
+document.getElementById('prevBtn').onclick = ()=>{ idx=(idx-1+terms.length)%terms.length; renderCard(); };
+renderCard();
+
+const qas = [
+  {q:"What's the main difference between Adobe Analytics and CJA?",
+   a:"Adobe Analytics reports on one data source (typically web/app) with a fixed prop/eVar model. <b>CJA combines multiple data sources</b> (web, app, CRM, offline, call center) into a single person-centric view using XDM schemas and identity stitching — no fixed variable limits. For Boston Scientific, that means seeing one HCP's full journey — web research, app usage, field-rep visits — instead of three disconnected reports."},
+  {q:"Walk me through the CJA setup flow.",
+   a:"Connect data sources → build an XDM schema → map data into a Dataset → create a CJA Connection joining datasets → build a Data View to curate reportable fields → analyze in Workspace. In the example: Web + HCP App + Salesforce → schema with an NPI-based Identity → unified HCP dataset → BSC Connection → HCP-facing Data View → Workspace report on device interest vs. rep follow-up."},
+  {q:"How does CJA handle cross-device / cross-channel identity?",
+   a:"Through <b>Identity Stitching</b> — one field in the schema (email, login ID, ECID, or an NPI number) is marked as the Identity, and Adobe links all events for that person into a single journey, regardless of device or channel."},
+  {q:"What would you migrate first when moving from GA to CJA?",
+   a:"Start with mapping GA's key events/conversions to XDM fields, run both tools in parallel to validate parity, then migrate segments/custom dimensions, and only sunset GA after a validated cutover period."},
+  {q:"What's a Data View and why does it matter?",
+   a:"It's a curated, report-ready layer sitting on top of a Connection — it controls exactly which fields analysts can see and use. In a regulated industry like medtech, this also enforces <b>governance</b> — e.g., keeping sensitive Salesforce rep notes hidden from a marketing analyst's Data View while still exposing engagement metrics."},
+  {q:"Why would identity resolution be especially important for a medtech company?",
+   a:"HCPs interact across many disconnected systems — public website, gated HCP portals, conference lead scans, CRM visit logs. Without a reliable identity (like an NPI number), each touchpoint looks like a different anonymous visitor, making it impossible to measure whether digital engagement actually influences field activity or prescribing behavior."},
+];
+
+function renderQA(){
+  const zone = document.getElementById('qaMode');
+  zone.innerHTML = qas.map((item,i)=>`
+    <div class="qa-item" data-i="${i}">
+      <div class="qa-q">
+        <div class="qa-qtext">${item.q}</div>
+        <div class="qa-chevron">›</div>
+      </div>
+      <div class="qa-a"><div class="qa-a-inner">${item.a}</div></div>
+      <div class="self-test">Try answering out loud first, then tap the question to check yourself.</div>
+    </div>`).join('');
+  zone.querySelectorAll('.qa-q').forEach(q=>{
+    q.onclick = ()=>{ q.parentElement.classList.toggle('open'); };
+  });
+}
+renderQA();
+
+document.getElementById('btnFlash').onclick = ()=>{
+  document.getElementById('btnFlash').classList.add('active');
+  document.getElementById('btnQA').classList.remove('active');
+  document.getElementById('flashMode').classList.remove('hidden');
+  document.getElementById('qaMode').classList.add('hidden');
+};
+document.getElementById('btnQA').onclick = ()=>{
+  document.getElementById('btnQA').classList.add('active');
+  document.getElementById('btnFlash').classList.remove('active');
+  document.getElementById('qaMode').classList.remove('hidden');
+  document.getElementById('flashMode').classList.add('hidden');
+};
+</script>
+</body>
+</html>
