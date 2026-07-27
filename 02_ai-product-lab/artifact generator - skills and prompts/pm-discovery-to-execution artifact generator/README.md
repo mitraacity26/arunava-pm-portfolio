@@ -1,83 +1,91 @@
-# 🤖 AI PM Copilot
+# 🤖 AI PM Workflow
 
-> An AI-powered Product Management workflow that helps Product Managers generate high-quality product artifacts using reusable prompts or a Claude Skill.
-
-Instead of manually writing Product Requirements Documents (PRDs), User Stories, Product Teardowns, Roadmaps, or other PM artifacts, this repository provides a structured workflow that leverages prompt engineering and Claude Skills to accelerate product discovery and documentation.
+> An AI-powered Product Management workflow that transforms a business idea into complete product artifacts using Prompt Engineering and Claude Skills.
 
 ---
 
-# 🚀 Features
+## 🚀 Overview
 
-- 📄 Generate Product Requirement Documents (PRDs)
-- 📚 Create User Stories & Acceptance Criteria
-- 🔍 Perform Product Teardowns
-- 📈 Build Product Roadmaps
-- 📊 Generate KPI Trees & Metrics
-- 🧪 Create Product Experiments
-- 🎯 Prioritize Features
-- 🤖 Use either standalone prompts or a Claude Skill
+This repository demonstrates an end-to-end AI-assisted Product Management workflow.
+
+Starting with a business idea, the workflow automates product discovery, strategy, planning, and execution to generate high-quality product artifacts.
+
+You can execute the workflow in two ways:
+
+- 📝 **Prompt Library** – Run each prompt independently.
+- 🤖 **Claude Skill (Recommended)** – Install the Claude Skill to automatically orchestrate the complete workflow.
 
 ---
 
-# 📁 Repository Structure
+# 📂 Repository Structure
 
 ```
-AI PM Copilot
+AI PM Workflow
 │
-├── reference-prompts/
-│   ├── prompt-01.md
-│   ├── prompt-02.md
-│   ├── prompt-03.md
-│   └── ...
-│
-├── claude-skill/
-│   ├── skill.md
-│   └── README.md
-│
-├── sample-input/
-│   └── business-context.md
-│
-├── sample-output/
-│   └── generated-artifacts.md
-│
+├── prompt-library/       # Reusable standalone prompts
+├── claude-skill/         # Claude Skill for end-to-end automation
+├── business-context/     # Sample business inputs
+├── sample-output/        # Generated product artifacts
+├── assets/
+│   └── images/
+│       └── workflow.png
 └── README.md
 ```
 
 ---
 
-# 🧠 Two Ways to Use
+# 🔄 Workflow
 
-## Option 1 – Standalone Prompts
+<p align="center">
+    <img src="03_product-artifacts/Discovery_to_Execution_Workflow.jpg"
+         alt="AI PM Workflow"
+         width="950"/>
+</p>
 
-Each prompt inside **reference-prompts** can be executed independently.
+The workflow begins with a **Business Context**, processes it using either the **Prompt Library** or the **Claude Skill**, and generates complete Product Management deliverables.
 
-Example workflow
+---
+
+# 📥 Input
+
+Provide a business context containing:
+
+- Product Vision
+- Problem Statement
+- Target Users
+- Business Goals
+- Constraints
+
+---
+
+# ⚙️ Execution
+
+## Option 1 — Prompt Library
+
+Execute the prompts sequentially.
 
 ```
 Business Context
         │
         ▼
-Prompt 1
+Prompt Library
         │
         ▼
-Prompt 2
+PM Workflow
         │
         ▼
-Prompt 3
-        │
-        ▼
-Final PM Artifact
+Product Artifacts
 ```
-
-This approach is useful when you want complete control over each step of the workflow.
 
 ---
 
-## Option 2 – Claude Skill (Recommended)
+## Option 2 — Claude Skill ⭐ Recommended
 
-Instead of copying and executing each prompt individually, install the provided Claude Skill.
+Install the Claude Skill once.
 
-The skill automatically orchestrates the workflow by invoking the appropriate prompts in the correct sequence.
+Provide only the business context.
+
+The skill automatically executes the required prompts and generates the complete output.
 
 ```
 Business Context
@@ -86,124 +94,76 @@ Business Context
 Claude Skill
         │
         ▼
-Reference Prompts
+Prompt Library
         │
         ▼
-Generated Product Artifact
+PM Workflow
+        │
+        ▼
+Product Artifacts
 ```
 
-This approach is faster, reusable, and provides a consistent output.
+---
+
+# 📤 Output
+
+The workflow generates:
+
+- 📄 Product Requirement Document (PRD)
+- 📖 User Stories
+- ✅ Acceptance Criteria
+- 🛣️ Product Roadmap
+- 🎯 Product Strategy
+- 📊 KPIs & Success Metrics
+- 👥 User Personas
+- 🗺️ Customer Journey Map
+- 🚀 Go-To-Market (GTM) Plan
+- 🧪 Product Experiments
+- 📱 Product Teardowns
+- 📈 Product-Market Fit Assessment
 
 ---
 
-# 📂 Folder Guide
+# 📁 Folder Guide
 
-## reference-prompts/
-
-Contains reusable prompt templates.
-
-These prompts can be used independently or as part of the Claude Skill workflow.
-
-Examples
-
-- PRD Generator
-- Product Discovery
-- User Story Generator
-- Acceptance Criteria
-- KPI Generator
-- Product Teardown
-- Feature Prioritization
-- Roadmap Generator
+| Folder | Description |
+|---------|-------------|
+| **prompt-library** | Standalone reusable prompts for each Product Management activity |
+| **claude-skill** | Claude Skill that automates the entire workflow |
+| **business-context** | Sample business context used as workflow input |
+| **sample-output** | Example deliverables generated by the workflow |
+| **assets** | Images and supporting documentation |
 
 ---
 
-## claude-skill/
+# 🎯 Purpose
 
-Contains the complete Claude Skill (`skill.md`).
-
-The skill orchestrates the entire workflow and automatically references the prompt library.
-
-Once installed in Claude, users only need to provide the business context to generate complete product documentation.
+The objective of this repository is to demonstrate how Prompt Engineering and Claude Skills can automate the Product Management lifecycle, producing consistent, high-quality deliverables from a single business context.
 
 ---
 
-## sample-input/
-
-Contains sample business context used to initiate the workflow.
-
-Example
-
-- Product vision
-- Problem statement
-- Target users
-- Business goals
-- Constraints
-
----
-
-## sample-output/
-
-Contains the generated deliverables after running the workflow.
-
-Examples
-
-- PRD
-- User Stories
-- Acceptance Criteria
-- Product Roadmap
-- KPIs
-- Product Teardown
-- Prioritized Backlog
-
----
-
-# 🔄 Workflow
+## ⭐ Recommended Workflow
 
 ```
 Business Context
         │
         ▼
-Reference Prompts
-(or Claude Skill)
+Claude Skill
         │
         ▼
-AI Processing
+Prompt Library
         │
         ▼
-Generated PM Deliverables
+Discovery
+Direction
+Strategy
+Execution
+Validation
+        │
+        ▼
+PRD • Roadmap • User Stories • GTM • KPIs • PMF
 ```
 
 ---
 
-# 🎯 Who is this for?
-
-- Product Managers
-- Associate Product Managers
-- Product Owners
-- Business Analysts
-- Startup Founders
-- AI Product Builders
-
----
-
-# 🛠️ Technologies
-
-- Claude
-- Prompt Engineering
-- Claude Skills
-- Markdown
-- Product Management Frameworks
-
----
-
-# 💡 Why This Project?
-
-Traditional product documentation is often repetitive and time-consuming.
-
-This repository demonstrates how AI can streamline Product Management workflows by combining structured prompts with reusable Claude Skills to generate consistent, high-quality product artifacts.
-
----
-
-# 📜 License
-
-This repository is intended for learning, experimentation, and portfolio demonstration purposes.
+**If you found this repository useful, consider giving it a ⭐.**
