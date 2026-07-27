@@ -37,7 +37,7 @@ AI PM Workflow
 # 🔄 Workflow
 
 <p align="center">
-    <img src="03_product-artifacts/Discovery_to_Execution_Workflow.jpg"
+    <img src="https://github.com/mitraacity26/arunava-pm-portfolio/tree/main/03_product-artifacts/Discovery_to_Execution_Workflow.jpg"
          alt="AI PM Workflow"
          width="950"/>
 </p>
