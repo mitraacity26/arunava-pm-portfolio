@@ -22,8 +22,7 @@ You can execute the workflow in two ways:
 ```
 pm-discovery-to-execution artifact generator/
 │
-├── pm-discovery-to-execution-skill-prompts/     # Claude Skill + reusable prompt library
-│   └── pm-discovery-to-execution/
+├── pm-discovery-to-execution/     # Claude Skill + reusable prompt library
 │       ├── SKILL.md                             # Claude Skill definition (orchestrates the workflow)
 │       └── references/                          # Standalone prompts, one per PM activity
 │           ├── 01-discovery.md
