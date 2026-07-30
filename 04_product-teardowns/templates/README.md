@@ -1,3 +1,0 @@
-# Templates
-
-Content coming soon.
